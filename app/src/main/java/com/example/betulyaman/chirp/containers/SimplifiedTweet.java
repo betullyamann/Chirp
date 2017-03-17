@@ -8,23 +8,23 @@ public class SimplifiedTweet {
     private final String name;
     private final String handle;
     private final String text;
-    private final ArrayList <String> parsedText;
-    private final ArrayList <String> categories;
+    private final ArrayList<String> parsedText;
+    private final ArrayList<String> categories;
 
     public SimplifiedTweet(String name, String handle, String text) {
         this.name = name;
         this.handle = handle;
         this.text = text;
-        parsedText = new ArrayList <>();
-        categories = new ArrayList <>();
+        parsedText = new ArrayList<>();
+        categories = new ArrayList<>();
     }
 
     public SimplifiedTweet(Tweet tweet) {
         this.name = tweet.user.name;
         this.handle = tweet.user.screenName;
         this.text = tweet.text;
-        parsedText = new ArrayList <>();
-        categories = new ArrayList <>();
+        parsedText = new ArrayList<>();
+        categories = new ArrayList<>();
     }
 
     public String getName() {
@@ -39,11 +39,11 @@ public class SimplifiedTweet {
         return text;
     }
 
-    public ArrayList <String> getParsedText() {
+    public ArrayList<String> getParsedText() {
         return parsedText;
     }
 
-    public ArrayList <String> getCategories() {
+    public ArrayList<String> getCategories() {
         return categories;
     }
 

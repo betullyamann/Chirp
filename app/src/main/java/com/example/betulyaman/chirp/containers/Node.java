@@ -1,7 +1,5 @@
 package com.example.betulyaman.chirp.containers;
 
-import com.example.betulyaman.chirp.handlers.OntologyHandler;
-
 import java.util.ArrayList;
 
 public class Node {
@@ -32,7 +30,7 @@ public class Node {
         return adjacentNodes.get(index);
     }
 
-    public ArrayList<Node> getAdjacentNodes(){
+    public ArrayList<Node> getAdjacentNodes() {
 
         return adjacentNodes;
     }

@@ -1,20 +1,20 @@
 package com.example.betulyaman.chirp.containers;
 
-public class FrequencyWrapper {
-    private Integer frequency;
+public class VectorElement {
     private String word;
+    private Integer point;
 
-    public FrequencyWrapper(String word) {
-        frequency = 1;
+    public VectorElement(String word, Integer point) {
         this.word = word;
+        this.point = point;
     }
 
     public Integer getFrequency() {
-        return frequency;
+        return point;
     }
 
     public void setFrequency(Integer frequency) {
-        this.frequency = frequency;
+        this.point = frequency;
     }
 
     public String getWord() {
@@ -23,9 +23,5 @@ public class FrequencyWrapper {
 
     public void setWord(String word) {
         this.word = word;
-    }
-
-    public void incrementFrequency() {
-        frequency = frequency + 1;
     }
 }

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
+import com.example.betulyaman.chirp.containers.VectorElement;
 
 import java.nio.channels.Pipe;
 import java.sql.Time;
@@ -12,10 +13,6 @@ import java.util.ArrayList;
 
 public class OntologyHandler extends Thread {
 
-    @Override
-    public void run() {
-
-    }
 
     // Tag'e iliskin ontoloji olusturuluyor
     public static void createOnthology(String tag) {
@@ -49,12 +46,24 @@ public class OntologyHandler extends Thread {
         }
     }
 
-    public static void vectorize(Ontology ontology) {
-        // TODO
+    public static ArrayList<VectorElement> vectorize(Ontology ontology) {
+        ArrayList<VectorElement> vector = new ArrayList<>();
+        vector.add(new VectorElement(ontology.getRoot().getName(), 40));
 
-    }
+        for (int i = 0; i < ontology.getRoot().getAdjacentCount(); i++) {
+            vector.add(new VectorElement(ontology.getRoot().getAdjacent(i).getName(), ontology.getRoot().getStrength(i)));
+        }
 
-    // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
+        for (int i = 0; i < ontology.getRoot().getAdjacentCount(); i++) {
+            Node node = ontology.getRoot().getAdjacent(i);
+            for (int j = 0; j < ontology.getRoot().getAdjacentCount(); j++) {
+
+            }
+            return new ArrayList<>();
+        }
+
+        // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
+
     private static Integer checkAdjacency(Node root, Node leaf) {
         if (root.getPrimitive().getReferences().contains(leaf.getName()) || leaf.getPrimitive().getReferences().contains(root.getName())) {
             return 20;
