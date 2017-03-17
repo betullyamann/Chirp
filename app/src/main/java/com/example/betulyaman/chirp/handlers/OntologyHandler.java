@@ -1,5 +1,7 @@
 package com.example.betulyaman.chirp.handlers;
 
+import android.content.res.Resources;
+
 import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
@@ -8,7 +10,12 @@ import java.nio.channels.Pipe;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class OntologyHandler {
+public class OntologyHandler extends Thread {
+
+    @Override
+    public void run() {
+
+    }
 
     // Tag'e iliskin ontoloji olusturuluyor
     public static void createOnthology(String tag) {
@@ -52,10 +59,10 @@ public class OntologyHandler {
         if (root.getPrimitive().getReferences().contains(leaf.getName()) || leaf.getPrimitive().getReferences().contains(root.getName())) {
             return 20;
         }
-        if(root.getPrimitive().getFrequencyWords().contains(leaf.getName()) || leaf.getPrimitive().getFrequencyWords().contains(root.getName())) {
+        if (root.getPrimitive().getFrequencyWords().contains(leaf.getName()) || leaf.getPrimitive().getFrequencyWords().contains(root.getName())) {
             return 20;
         }
-        if(root.getPrimitive().getTerms().contains(leaf.getName()) || leaf.getPrimitive().getTerms().contains(root.getName())){
+        if (root.getPrimitive().getTerms().contains(leaf.getName()) || leaf.getPrimitive().getTerms().contains(root.getName())) {
             return 20;
         }
 
@@ -69,18 +76,50 @@ public class OntologyHandler {
     }
 
     public static Primitive preparePage(String query) { // Wikipediadan gelen cevabı kopyalayıp yapıştırdım bunu kendisi alacak
-        long time = System.nanoTime();
 
         //Wikipedia'ye sorgu yapılıp referanslar ve frekanslar alınıyor
         //TDKya sorgu yapılıp sayfa iceriği alınıyor
-        Primitive page = ConnectionHandler.getWikiPage(query);
+        long t = System.nanoTime();
+        final Primitive page = ConnectionHandler.getWikiPage(query);
 
-        LanguageHandler.getPageReferences(page);
-        LanguageHandler.getPageWordFrequencies(page);
-        LanguageHandler.getTDKWords(page, ConnectionHandler.getTDKPage(page.getName()));
-    //TODO: THREAD
-        time = System.nanoTime() - time;
-        System.out.println("time"  + time);
+        Thread TDKWordsThread = new Thread() {
+            public void run() {
+                long time = System.nanoTime();
+                LanguageHandler.getTDKWords(page, ConnectionHandler.getTDKPage(page.getName()));
+                System.out.println("TDKWORDS TIME " + (System.nanoTime() - time));
+            }
+        };
+        TDKWordsThread.start();
+
+        Thread frequenciesThread = new Thread() {
+            public void run() {
+                long time = System.nanoTime();
+                LanguageHandler.getPageWordFrequencies(page);
+                System.out.println("FREQUENCIES TIME " + (System.nanoTime() - time));
+            }
+        };
+        frequenciesThread.start();
+
+        Thread referencesThread = new Thread() {
+            public void run() {
+                long time = System.nanoTime();
+                LanguageHandler.getPageReferences(page);
+                System.out.println("REFERENCES " + (System.nanoTime() - time));
+            }
+        };
+        referencesThread.start();
+
+        try {
+            long tt  = System.nanoTime();
+            referencesThread.join();
+            frequenciesThread.join();
+            TDKWordsThread.join();
+            System.out.println("JOIN " + (System.nanoTime() - tt));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("time " + (System.nanoTime() - t));
         return page;
     }
 }
