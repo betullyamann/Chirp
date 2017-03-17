@@ -42,8 +42,9 @@ public class OntologyHandler {
         }
     }
 
-    public static ArrayList vectorize(Ontology ontology) {
+    public static void vectorize(Ontology ontology) {
         // TODO
+
     }
 
     // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
@@ -67,7 +68,7 @@ public class OntologyHandler {
         leaf.addAdjacent(root, strength);
     }
 
-    private static Primitive preparePage(String query) { // Wikipediadan gelen cevabı kopyalayıp yapıştırdım bunu kendisi alacak
+    public static Primitive preparePage(String query) { // Wikipediadan gelen cevabı kopyalayıp yapıştırdım bunu kendisi alacak
         long time = System.nanoTime();
 
         //Wikipedia'ye sorgu yapılıp referanslar ve frekanslar alınıyor
