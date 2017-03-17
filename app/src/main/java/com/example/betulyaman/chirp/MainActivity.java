@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TWITTER_KEY = "832KLZNI1BvYOh3ysVRBtLgHV";
     private static final String TWITTER_SECRET = "6Karh2h3wjXpvbAB2XpUvbwSo9zdgchETeZW6IB20Ilq09zQhJ";
 
+    // BETÜL
+
     Button button;
     Button login;
     EditText editText;
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /**Dallanılan threadi bulmak için context*/
+        /* Dallanılan threadi bulmak için context*/
 
         button.performClick();
 
