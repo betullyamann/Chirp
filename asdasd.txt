@@ -1,0 +1,13 @@
+    protected void parse() throws JSONException { // Wikipediadan gelen cevabý kopyalayýp yapýþtýrdým bunu kendisi alýcak tabi ki
+        String str = "{\"parse\": ........
+        JSONObject obj = new JSONObject(str);
+        obj = obj.getJSONObject("parse"); // gelen cevapta herþey parse diye bi katman içine gömülmüþ yani isimsiz bir json objesi içinde parse diye bi obje var referansýmýzý direk bu parse objesine atýyorum ekstra fonksiyon çaðýrmaktan kurtuldum
+        String pageName = obj.getString("title"); // parse objesinin title memberýna eriþiyorum
+        System.out.println(pageName);
+
+        JSONArray arr = obj.getJSONArray("links"); // json dosyasýnda links diye bi array tanýmlanmýþ ondan bi dizi üretiyorum
+        for (int i = 0; i < arr.length(); i++) {
+            String post_id = arr.getJSONObject(i).getString("*"); // bu dizinin elemanlarý artýk birer referans ve isimleri * diye bi memberda tutuluyor
+            System.out.println(post_id);
+        }
+    }
