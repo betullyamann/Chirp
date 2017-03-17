@@ -4,6 +4,8 @@ import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
 
+import java.nio.channels.Pipe;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class OntologyHandler {
@@ -66,13 +68,18 @@ public class OntologyHandler {
     }
 
     private static Primitive preparePage(String query) { // Wikipediadan gelen cevabı kopyalayıp yapıştırdım bunu kendisi alacak
-        //W sorgu yapılıp referanslar ve frekanslar alınıyor
+        long time = System.nanoTime();
+
+        //Wikipedia'ye sorgu yapılıp referanslar ve frekanslar alınıyor
         //TDKya sorgu yapılıp sayfa iceriği alınıyor
         Primitive page = ConnectionHandler.getWikiPage(query);
+
         LanguageHandler.getPageReferences(page);
         LanguageHandler.getPageWordFrequencies(page);
         LanguageHandler.getTDKWords(page, ConnectionHandler.getTDKPage(page.getName()));
     //TODO: THREAD
+        time = System.nanoTime() - time;
+        System.out.println("time"  + time);
         return page;
     }
 }
