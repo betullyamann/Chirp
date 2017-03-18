@@ -1,11 +1,25 @@
 package com.example.betulyaman.chirp.handlers;
 
+import android.content.Context;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import com.example.betulyaman.chirp.containers.Primitive;
+import com.example.betulyaman.chirp.containers.SimplifiedTweet;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterApiClient;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.core.services.StatusesService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -56,6 +70,24 @@ public class ConnectionHandler {
         }
         return page;
     }
-}
 
+    //Twittera erişilerek tweetler alınıyor
+    protected void getTweets(){
+
+        final ArrayList<SimplifiedTweet> tweets = new ArrayList<>();
+        TwitterCore twitter = TwitterCore.getInstance();
+        TwitterApiClient tac = twitter.getApiClient();
+        StatusesService statusesService = tac.getStatusesService();
+        Call<List<Tweet>> call = statusesService.homeTimeline(200, null, null, null, null, null, null);
+
+        try {
+            List<Tweet> result = call.execute().body();
+            for (Tweet tweet : result) {
+                tweets.add(new SimplifiedTweet(tweet));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
 

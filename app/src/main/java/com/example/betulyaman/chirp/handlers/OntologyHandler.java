@@ -46,9 +46,12 @@ public class OntologyHandler extends Thread {
         }
     }
 
+    // Ontolojinin kelime vektörü çıkartılıyor.
+    // Kelime vektöründe komşu kelimeler ve bu kelimelerin ontolojiyle olan bağlantısı tutuluyor.
     public static ArrayList<VectorElement> vectorize(Ontology ontology) {
         ArrayList<VectorElement> vector = new ArrayList<>();
         vector.add(new VectorElement(ontology.getRoot().getName(), 40));
+        //TODO 40?
 
         for (int i = 0; i < ontology.getRoot().getAdjacentCount(); i++) {
             vector.add(new VectorElement(ontology.getRoot().getAdjacent(i).getName(), ontology.getRoot().getStrength(i)));
@@ -59,11 +62,12 @@ public class OntologyHandler extends Thread {
             for (int j = 0; j < ontology.getRoot().getAdjacentCount(); j++) {
 
             }
-            return new ArrayList<>();
         }
+        return new ArrayList<>();
+    }
 
-        // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
 
+    // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
     private static Integer checkAdjacency(Node root, Node leaf) {
         if (root.getPrimitive().getReferences().contains(leaf.getName()) || leaf.getPrimitive().getReferences().contains(root.getName())) {
             return 20;
@@ -119,7 +123,7 @@ public class OntologyHandler extends Thread {
         referencesThread.start();
 
         try {
-            long tt  = System.nanoTime();
+            long tt = System.nanoTime();
             referencesThread.join();
             frequenciesThread.join();
             TDKWordsThread.join();

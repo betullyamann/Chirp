@@ -29,12 +29,9 @@ public class TwitterHandler {
 
     // TODO Obfuscate keys
 
-
-    private Context context;
     private Activity activity;
 
-    public TwitterHandler(Context context, Activity activity) {
-        this.context = context;
+    public TwitterHandler(Activity activity) {
         this.activity = activity;
     }
 
@@ -43,41 +40,7 @@ public class TwitterHandler {
         activity.startActivityForResult(intent, 0);
     }
 
-    protected void getTweets(final LinearLayout tweetView) {
-        final ArrayList<SimplifiedTweet> tweets = new ArrayList<>();
-        TwitterCore twitter = TwitterCore.getInstance();
-        TwitterApiClient tac = twitter.getApiClient();
-        StatusesService statusesService = tac.getStatusesService();
-        Call<List<Tweet>> call = statusesService.homeTimeline(200, null, null, null, null, null, null);
-        call.enqueue(new Callback<List<Tweet>>() {
-            @Override
-            public void success(Result<List<Tweet>> result) {
-                for (Tweet tweet : result.data) {
-                    tweets.add(new SimplifiedTweet(tweet));
-                }
-                for (SimplifiedTweet tweet : tweets) {
-                    tweetView.addView(prepareTweet(tweet));
-                }
-            }
+    public static void prepareTweet(SimplifiedTweet tweet) {
 
-            @Override
-            public void failure(TwitterException exception) {
-                Toast.makeText(context, exception.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    protected TextView prepareTweet(SimplifiedTweet tweet) {
-        // TODO zemberek
-
-        TextView msg = new TextView(context);
-        msg.setEms(10);
-        msg.setText(tweet.getName() + " (" + tweet.getHandle() + "): " + tweet.getText());
-        msg.setPadding(10, 10, 10, 10);
-        msg.setTextColor(Color.BLACK);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.START);
-        params.setMargins(10, 10, 10, 10);
-        msg.setLayoutParams(params);
-        return msg;
     }
 }
