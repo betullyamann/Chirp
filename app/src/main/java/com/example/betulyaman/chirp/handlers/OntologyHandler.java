@@ -1,19 +1,15 @@
 package com.example.betulyaman.chirp.handlers;
 
-import android.content.res.Resources;
-
 import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.VectorElement;
 
-import java.nio.channels.Pipe;
-import java.sql.Time;
 import java.util.ArrayList;
 
 public class OntologyHandler extends Thread {
 
-
+    // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
     // Tag'e iliskin ontoloji olusturuluyor
     public static void createOnthology(String tag) {
         Ontology ontology = new Ontology(tag);
@@ -59,13 +55,20 @@ public class OntologyHandler extends Thread {
 
         for (int i = 0; i < ontology.getRoot().getAdjacentCount(); i++) {
             Node node = ontology.getRoot().getAdjacent(i);
-            for (int j = 0; j < ontology.getRoot().getAdjacentCount(); j++) {
-
+            for (int j = 0; j < node.getAdjacentCount(); j++) {
+                for (VectorElement element : vector) {
+                    if (!node.getAdjacent(j).getName().equals(element.getWord())) {
+                        vector.add(new VectorElement(node.getAdjacent(j).getName(), node.getStrength(i)));
+                    } else {
+                        if (element.getFrequency() < node.getStrength(j)) {
+                            element.setFrequency(node.getStrength(j));
+                        }
+                    }
+                }
             }
         }
-        return new ArrayList<>();
+        return vector;
     }
-
 
     // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
     private static Integer checkAdjacency(Node root, Node leaf) {
