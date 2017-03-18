@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final TwitterHandler twitterHandler = new TwitterHandler(getApplicationContext(), this);
+        final TwitterHandler twitterHandler = new TwitterHandler(this);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(getApplicationContext(), new Twitter(authConfig));
         setContentView(R.layout.activity_main);
