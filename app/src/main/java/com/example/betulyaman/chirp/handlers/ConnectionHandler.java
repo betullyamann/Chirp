@@ -72,7 +72,7 @@ public class ConnectionHandler {
     }
 
     //Twittera erişilerek tweetler alınıyor
-    protected void getTweets(){
+    protected static void getTweets() {
 
         final ArrayList<SimplifiedTweet> tweets = new ArrayList<>();
         TwitterCore twitter = TwitterCore.getInstance();
@@ -89,5 +89,7 @@ public class ConnectionHandler {
             e.printStackTrace();
         }
     }
+
+
 }
 
