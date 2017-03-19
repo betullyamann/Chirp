@@ -57,7 +57,7 @@ public class ConnectionHandler {
     }
 
     //Twittera erişilerek tweetler alınıyor
-    protected static void getTweets() {
+    protected static ArrayList<SimplifiedTweet> getTweets() {
         ArrayList<SimplifiedTweet> tweets = new ArrayList<>();
         TwitterCore twitter = TwitterCore.getInstance();
         TwitterApiClient tac = twitter.getApiClient();
@@ -71,6 +71,8 @@ public class ConnectionHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return tweets;
     }
 
     private interface ConnectionService {

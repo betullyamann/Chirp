@@ -98,14 +98,6 @@ public class OntologyHandler extends Thread {
         long t = System.nanoTime();
         final Primitive page = ConnectionHandler.getWikiPage(query);
 
-        Thread TDKWordsThread = new Thread() {
-            public void run() {
-                long time = System.nanoTime();
-                LanguageHandler.getTDKWords(page, ConnectionHandler.getTDKPage(page.getName()));
-                System.out.println("TDKWORDS TIME " + (System.nanoTime() - time));
-            }
-        };
-        TDKWordsThread.start();
 
         Thread frequenciesThread = new Thread() {
             public void run() {
@@ -125,11 +117,14 @@ public class OntologyHandler extends Thread {
         };
         referencesThread.start();
 
+        long time = System.nanoTime();
+        LanguageHandler.getTDKWords(page, ConnectionHandler.getTDKPage(page.getName()));
+        System.out.println("TDKWORDS TIME " + (System.nanoTime() - time));
+
         try {
             long tt = System.nanoTime();
             referencesThread.join();
             frequenciesThread.join();
-            TDKWordsThread.join();
             System.out.println("JOIN " + (System.nanoTime() - tt));
         } catch (InterruptedException e) {
             e.printStackTrace();
