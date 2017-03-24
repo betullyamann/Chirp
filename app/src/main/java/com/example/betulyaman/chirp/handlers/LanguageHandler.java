@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.betulyaman.chirp.containers.FrequencyWrapper;
 import com.example.betulyaman.chirp.containers.Primitive;
+import com.example.betulyaman.chirp.containers.SimplifiedTweet;
 
 import net.zemberek.araclar.turkce.YaziBirimi;
 import net.zemberek.araclar.turkce.YaziBirimiTipi;
@@ -24,7 +25,30 @@ public class LanguageHandler{
 
     private static final int FREQUENCY_THRESHOLD = 2;
 
+    public static void prepareTweet(ArrayList<SimplifiedTweet> tweets) {
 
+        Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
+
+        for (SimplifiedTweet tweet : tweets) {
+            List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(tweet.getText());
+            for (int j = 0; j < analizDizisi.size(); j++) {
+                try {
+                    if (analizDizisi.get(j).tip == YaziBirimiTipi.KELIME) {
+
+                        if (zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
+                            tweet.addWord(zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().icerik());
+                        }
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
+                }
+            }
+        }
+
+        for (SimplifiedTweet t : tweets) {
+            System.out.println("ParsedTweet: " + t.getText());
+        }
+    }
 
     //TDK'dan dönen sayfayı temizleyerek isimleri words dizisine atıyor.
     public static void getTDKWords(Primitive page, String text) {
