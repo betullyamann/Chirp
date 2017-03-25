@@ -76,6 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
 
+        c.close();
         return ontologies;
     }
 
@@ -90,6 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 entries.add(new VectorElement(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT))));
             } while (c.moveToNext());
         }
+        c.close();
         return entries;
     }
 
@@ -101,6 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_ONTOLOGY_ID + "= ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
         db.delete(TABLE_NAME_ONTOLOGY, "rowid = ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
+        c.close();
     }
 
     //Ontoloji içinden bir entry siliyor
@@ -110,6 +113,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(query, null);
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_ONTOLOGY_ID + " = ? AND " + ENTRY_COL_WORD + " = ?", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entry});
+        c.close();
     }
 
     public void editEntryName(String ontologyName, String entryName, String newName){
@@ -121,6 +125,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(query, null);
 
         db.update(TABLE_NAME_ENTRY, newValues, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? " , new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
+        c.close();
     }
 
     public void editEntryWeight(String ontologyName, String entryName, String newWeight){
@@ -132,7 +137,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery(query, null);
 
         db.update(TABLE_NAME_ENTRY, values, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
+        c.close();
     }
+
+    public void dropEntry(String ontologyName, String entry) {
+
+    }
+
+
 
 
     @Override
