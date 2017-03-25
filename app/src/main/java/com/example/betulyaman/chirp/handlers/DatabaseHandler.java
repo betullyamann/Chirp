@@ -2,6 +2,7 @@ package com.example.betulyaman.chirp.handlers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -61,16 +62,76 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<String> getOntologies() {
 
+    //Ontoloji isimleri bir arraylist olarak döndürülüyor.
+    public ArrayList<String> getOntologies() {
+        ArrayList<String> ontologies = new ArrayList<>();
+        String query = "SELECT " + ONTOLOGY_COL_NAME + " FROM " + TABLE_NAME_ONTOLOGY;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                ontologies.add(c.getString(c.getColumnIndex(ONTOLOGY_COL_NAME)));
+            } while (c.moveToNext());
+        }
+
+        return ontologies;
     }
 
     public ArrayList<VectorElement> getEntries(String ontologyName) {
+        ArrayList<VectorElement> entries = new ArrayList<>();
+        String query = "SELECT " + ENTRY_COL_WORD + "," + ENTRY_COL_WEIGHT + " FROM " + TABLE_NAME_ONTOLOGY;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(query, null);
 
+        if (c.moveToFirst()) {
+            do {
+                entries.add(new VectorElement(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT))));
+            } while (c.moveToNext());
+        }
+        return entries;
     }
 
-    public void dropOntology(String ontologyName) {
+    //Verilen isimdeki ontolojiyi siliyor
+    public void deleteOntology(String ontologyName) {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
+        Cursor c = db.rawQuery(query, null);
 
+        db.delete(TABLE_NAME_ENTRY, ENTRY_COL_ONTOLOGY_ID + "= ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
+        db.delete(TABLE_NAME_ONTOLOGY, "rowid = ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
+    }
+
+    //Ontoloji içinden bir entry siliyor
+    public void deleteEntries(String entry, String ontologyName) {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
+        Cursor c = db.rawQuery(query, null);
+
+        db.delete(TABLE_NAME_ENTRY, ENTRY_COL_ONTOLOGY_ID + " = ? AND " + ENTRY_COL_WORD + " = ?", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entry});
+    }
+
+    public void editEntryName(String ontologyName, String entryName, String newName){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues newValues = new ContentValues();
+        newValues.put(ENTRY_COL_WORD, newName);
+
+        String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
+        Cursor c = db.rawQuery(query, null);
+
+        db.update(TABLE_NAME_ENTRY, newValues, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? " , new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
+    }
+
+    public void editEntryWeight(String ontologyName, String entryName, String newWeight){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ENTRY_COL_WEIGHT, newWeight);
+
+        String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
+        Cursor c = db.rawQuery(query, null);
+
+        db.update(TABLE_NAME_ENTRY, values, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
     }
 
 
@@ -81,7 +142,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY
                 + " (" + ENTRY_COL_ONTOLOGY_ID + " INTEGER PRIMARY KEY, "
                 + ENTRY_COL_WORD + " INTEGER PRIMARY KEY, "
-                + ENTRY_COL_WEIGHT + " INTEGER NOT NULL);");
+                + ENTRY_COL_WEIGHT + " INTEGER NOT NULL) WITHOUT ROWID;");
     }
 
     @Override
