@@ -3,6 +3,7 @@ package com.example.betulyaman.chirp.containers;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class SimplifiedTweet {
     private final String name;
@@ -10,6 +11,7 @@ public class SimplifiedTweet {
     private final String text;
     private final ArrayList<String> words;
     private final ArrayList<String> categories;
+    private final ArrayList<Integer> points;
 
     public SimplifiedTweet(String name, String handle, String text) {
         this.name = name;
@@ -17,6 +19,7 @@ public class SimplifiedTweet {
         this.text = text;
         words = new ArrayList<>();
         categories = new ArrayList<>();
+        points = new ArrayList<>();
     }
 
     public SimplifiedTweet(Tweet tweet) {
@@ -25,7 +28,9 @@ public class SimplifiedTweet {
         this.text = tweet.text;
         words = new ArrayList<>();
         categories = new ArrayList<>();
+        points = new ArrayList<>();
     }
+
 
     public String getName() {
         return name;
@@ -51,7 +56,18 @@ public class SimplifiedTweet {
         words.add(word);
     }
 
-    public void addCatrgory(String category) {
+    public void addCategory(String category) {
         categories.add(category);
     }
+
+    public boolean containsWord(String entry) {
+
+        return words.contains(entry);
+    }
+
+    public void addPoint(String ontology, Integer frequency){
+        points.set(categories.indexOf(ontology), points.get(categories.indexOf(ontology))+frequency);
+    }
+
+
 }

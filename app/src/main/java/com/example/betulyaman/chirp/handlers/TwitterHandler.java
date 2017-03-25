@@ -19,7 +19,6 @@ public class TwitterHandler {
     }
 
 
-
     public void login() {
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivityForResult(intent, 0);
