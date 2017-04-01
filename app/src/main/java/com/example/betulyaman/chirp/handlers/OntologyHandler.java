@@ -5,11 +5,17 @@ import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.VectorElement;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
-public class OntologyHandler extends Thread {
+public class OntologyHandler {
+
+    public static void start(){
+        
+    }
 
     // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
+
     // Tag'e iliskin ontoloji olusturuluyor
     public static void createOnthology(String tag) {
         Ontology ontology = new Ontology(tag);
@@ -46,6 +52,7 @@ public class OntologyHandler extends Thread {
     // Kelime vektöründe komşu kelimeler ve bu kelimelerin ontolojiyle olan bağlantısı tutuluyor.
     public static ArrayList<VectorElement> vectorize(Ontology ontology) {
         ArrayList<VectorElement> vector = new ArrayList<>();
+
         vector.add(new VectorElement(ontology.getRoot().getName(), 40));
         //TODO 40?
 
@@ -67,8 +74,10 @@ public class OntologyHandler extends Thread {
                 }
             }
         }
-        return vector;
+
+
     }
+
 
     // Wikipedia'den elde edilen kelimeler ve frekanslarla, TDK'dan elde edilen kelimelerle iki dugumun komsulugunu kontrol ediyor
     private static Integer checkAdjacency(Node root, Node leaf) {

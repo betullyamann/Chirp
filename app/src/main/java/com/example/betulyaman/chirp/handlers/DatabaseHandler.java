@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.betulyaman.chirp.containers.Ontology;
+import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.VectorElement;
 
 import java.util.ArrayList;
@@ -25,6 +27,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final static String ENTRY_COL_ONTOLOGY_ID = "ONTOLOGY_ID";
     private final static String ENTRY_COL_WORD = "WORD";
     private final static String ENTRY_COL_WEIGHT = "WEIGHT";
+
+    private final static String TABLE_NAME_VECTORIZE="VECTORS";
+    private final static String VECTORIZE_COL_NAME = "ADJACENTS";
+    private final static String VECTORIZE_STRENGHT = "STRENGHT";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -64,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     //Ontoloji isimleri bir arraylist olarak döndürülüyor.
-    public ArrayList<String> getOntologies() {
+    public ArrayList<String> getOntologyNames() {
         ArrayList<String> ontologies = new ArrayList<>();
         String query = "SELECT " + ONTOLOGY_COL_NAME + " FROM " + TABLE_NAME_ONTOLOGY;
         SQLiteDatabase db = getReadableDatabase();
@@ -116,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.close();
     }
 
-    public void editEntryName(String ontologyName, String entryName, String newName){
+    public void editEntryName(String ontologyName, String entryName, String newName) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues newValues = new ContentValues();
         newValues.put(ENTRY_COL_WORD, newName);
@@ -124,11 +130,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
         Cursor c = db.rawQuery(query, null);
 
-        db.update(TABLE_NAME_ENTRY, newValues, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? " , new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
+        db.update(TABLE_NAME_ENTRY, newValues, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
         c.close();
     }
 
-    public void editEntryWeight(String ontologyName, String entryName, String newWeight){
+    public void editEntryWeight(String ontologyName, String entryName, String newWeight) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ENTRY_COL_WEIGHT, newWeight);
@@ -136,14 +142,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT rowid FROM " + TABLE_NAME_ONTOLOGY + " WHERE " + ONTOLOGY_COL_NAME + " = " + ontologyName;
         Cursor c = db.rawQuery(query, null);
 
-        db.update(TABLE_NAME_ENTRY, values, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{ String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
+        db.update(TABLE_NAME_ENTRY, values, ENTRY_COL_ONTOLOGY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
         c.close();
     }
-
-    public void dropEntry(String ontologyName, String entry) {
-
-    }
-
 
 
 

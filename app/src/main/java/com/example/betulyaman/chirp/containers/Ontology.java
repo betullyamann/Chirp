@@ -6,6 +6,7 @@ public class Ontology {
     private Node root;
     private ArrayList<Node> nodes;
 
+
     public Ontology(String tag) {
         root = new Node(tag);
     }
@@ -21,4 +22,5 @@ public class Ontology {
     public void addNode(Node node) {
         nodes.add(node);
     }
+
 }
