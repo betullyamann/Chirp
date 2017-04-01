@@ -52,13 +52,13 @@ public class CategorizationHandler {
     // Puanları, belirlenen değerin altında kalan tweetler ilgili kategoriden siliniyor.
     public static void removeTweetsBelowThreshold(ArrayList<Category> categories) {
 
-        for (Category c : categories) {
-            Iterator<Integer> iter = c.getPoints().iterator();
+        for (Category category : categories) {
+            Iterator<Integer> iterator = category.getPoints().iterator();
             Integer i = 0;
-            while (iter.hasNext()) {
-                if (iter.next() < THRESHOLD) {
-                    iter.remove();
-                    c.getTweets().remove();
+            while (iterator.hasNext()) {
+                if (iterator.next() < THRESHOLD) {
+                    iterator.remove();
+                    category.getTweets().remove(category.getTweets().get(i));
                 } else {
                     i++;
                 }
