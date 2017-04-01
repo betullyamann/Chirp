@@ -3,7 +3,6 @@ package com.example.betulyaman.chirp.containers;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class SimplifiedTweet {
     private final String name;
@@ -25,6 +24,7 @@ public class SimplifiedTweet {
         this.handle = tweet.user.screenName;
         this.text = tweet.text;
         words = new ArrayList<>();
+        belongsToACategory = false;
     }
 
 
@@ -47,15 +47,17 @@ public class SimplifiedTweet {
     public void addWord(String word) {
         words.add(word);
     }
+
     public boolean containsWord(String entry) {
 
         return words.contains(entry);
     }
 
-    public Boolean belongsToACategory(){
+    public Boolean belongsToACategory() {
         return belongsToACategory;
     }
-    public void setBelongingTrue(){
+
+    public void setBelongingTrue() {
         belongsToACategory = true;
     }
 

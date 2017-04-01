@@ -5,13 +5,12 @@ import com.example.betulyaman.chirp.containers.Ontology;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.VectorElement;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 
 public class OntologyHandler {
 
-    public static void start(){
-        
+    public static void start() {
+
     }
 
     // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
@@ -75,7 +74,7 @@ public class OntologyHandler {
             }
         }
 
-
+        return vector;
     }
 
 

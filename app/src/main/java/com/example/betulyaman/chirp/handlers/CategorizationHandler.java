@@ -20,7 +20,7 @@ public class CategorizationHandler {
         ArrayList<Category> categories = new ArrayList<>();
 
         // Ontolojiler uygun categorilere ekleniyor ve ontolojiye ait kelimeler de kategorinin kelimelerine ekleniyor.
-        int i=0;
+        int i = 0;
         for (String ontologyName : databaseHandler.getOntologyNames()) {
             categories.add(new Category(ontologyName));
             categories.get(i).setWords(databaseHandler.getEntries(ontologyName));
@@ -58,7 +58,7 @@ public class CategorizationHandler {
             while (iter.hasNext()) {
                 if (iter.next() < THRESHOLD) {
                     iter.remove();
-                    c.getTweets().remove(i);
+                    c.getTweets().remove();
                 } else {
                     i++;
                 }

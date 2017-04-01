@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class LanguageHandler{
+public class LanguageHandler {
 
     private static final int FREQUENCY_THRESHOLD = 2;
 
