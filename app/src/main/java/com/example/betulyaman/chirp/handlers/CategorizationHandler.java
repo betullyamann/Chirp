@@ -20,10 +20,10 @@ public class CategorizationHandler {
         ArrayList<Category> categories = new ArrayList<>();
 
         // Ontolojiler uygun categorilere ekleniyor ve ontolojiye ait kelimeler de kategorinin kelimelerine ekleniyor.
-        int i = 0;
-        for (String ontologyName : databaseHandler.getOntologyNames()) {
-            categories.add(new Category(ontologyName));
-            categories.get(i).setWords(databaseHandler.getEntries(ontologyName));
+        int i=0;
+        for (String categoryName : databaseHandler.getCategoryNames()) {
+            categories.add(new Category(categoryName));
+            categories.get(i).setWords(databaseHandler.getEntries(categoryName));
             i++;
         }
 

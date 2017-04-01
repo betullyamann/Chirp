@@ -52,6 +52,7 @@ public class Category {
 
     public void addPoint(SimplifiedTweet tweet, Integer frequency) {
         if (!tweets.contains(tweet)) {
+            tweet.setBelongingTrue();
             tweets.add(tweet);
             points.ensureCapacity(tweets.size());
         }
