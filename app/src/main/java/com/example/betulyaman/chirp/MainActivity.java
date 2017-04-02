@@ -2,13 +2,12 @@ package com.example.betulyaman.chirp;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.support.v7.widget.Toolbar;
 
 import com.example.betulyaman.chirp.handlers.OntologyHandler;
-import com.example.betulyaman.chirp.handlers.TwitterHandler;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
@@ -21,55 +20,58 @@ public class MainActivity extends AppCompatActivity {
     private static final String TWITTER_KEY = "832KLZNI1BvYOh3ysVRBtLgHV";
     private static final String TWITTER_SECRET = "6Karh2h3wjXpvbAB2XpUvbwSo9zdgchETeZW6IB20Ilq09zQhJ";
 
-    Button button;
-    Button login;
-    EditText editText;
-    EditText output;
+
+    Toolbar toolbar;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Uygulamaya kaldığı yerden devam etme çabası
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
+
         super.onCreate(savedInstanceState);
-        final TwitterHandler twitterHandler = new TwitterHandler(this);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(getApplicationContext(), new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
-        output = (EditText) findViewById(R.id.output);
-        login = (Button) findViewById(R.id.login);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                twitterHandler.login();
-//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//                startActivityForResult(intent, 0);
-            }
-        });
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(getApplicationContext(), new Twitter(authConfig));
 
-        button = (Button) findViewById(R.id.button);
-        editText = (EditText) findViewById(R.id.editText);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MyTask().execute(editText.getText().toString());
-            }
-        });
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        /* Dallanılan threadi bulmak için context*/
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        button.performClick();
 
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
     }
 
     private class MyTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... voids) {
-            OntologyHandler.;
+            OntologyHandler.start();
 
             return null;
         }
     }
 
+/*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Make sure that the loginButton hears the result from any
+        // Activity that it triggered.
+        tlb.onActivityResult(requestCode, resultCode, data);
+    }
+*/
 
 }
