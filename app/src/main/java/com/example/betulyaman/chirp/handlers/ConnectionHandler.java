@@ -1,5 +1,7 @@
 package com.example.betulyaman.chirp.handlers;
 
+import android.util.Log;
+
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
 import com.twitter.sdk.android.core.TwitterApiClient;
@@ -13,6 +15,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -27,9 +31,23 @@ public class ConnectionHandler {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://www.tdk.gov.tr/").addConverterFactory(ScalarsConverterFactory.create()).build();
         ConnectionService connectionService = retrofit.create(ConnectionService.class);
         Call<String> service = connectionService.getFromTDK("com_gts", "gts", query);
-        String response = null;
+        String response = "";
         try {
-            response = service.execute().body();
+            String pattern = "[1-9]\\..*<br>";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m;
+            try {// Now create matcher object.
+                m = r.matcher(service.execute().body());
+                try {
+                    while (m.find()) {
+                        response += m.group() + " ";
+                    }
+                } catch (IllegalStateException e) {
+                    System.out.println("Böyle bir sayfa yok.");
+                }
+            } catch (NullPointerException ne) {
+                Log.d("null", ne.getMessage());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,11 +59,9 @@ public class ConnectionHandler {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://tr.wikipedia.org/").addConverterFactory(ScalarsConverterFactory.create()).build();
         ConnectionService connectionService = retrofit.create(ConnectionService.class);
         Call<String> service = connectionService.getFromWiki("parse", "json", "wikitext|links", "1", query);
-        String response;
+
         try {
-            response = service.execute().body();
-            JSONObject obj = new JSONObject(response);
-            response = "";
+            JSONObject obj = new JSONObject(service.execute().body());
             obj = obj.getJSONObject("parse");
             page.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
             obj = obj.getJSONObject("wikitext");

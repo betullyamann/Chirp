@@ -16,10 +16,8 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-
     private static final String TWITTER_KEY = "832KLZNI1BvYOh3ysVRBtLgHV";
     private static final String TWITTER_SECRET = "6Karh2h3wjXpvbAB2XpUvbwSo9zdgchETeZW6IB20Ilq09zQhJ";
-
 
     Toolbar toolbar;
     TabLayout tabLayout;
@@ -52,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
     private class MyTask extends AsyncTask<String, Void, Void> {
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-
 /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -73,5 +69,4 @@ public class MainActivity extends AppCompatActivity {
         tlb.onActivityResult(requestCode, resultCode, data);
     }
 */
-
 }

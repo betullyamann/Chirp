@@ -1,7 +1,5 @@
 package com.example.betulyaman.chirp.handlers;
 
-import android.util.Log;
-
 import com.example.betulyaman.chirp.containers.FrequencyWrapper;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
@@ -17,8 +15,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class LanguageHandler {
@@ -54,22 +50,7 @@ public class LanguageHandler {
     public static void getTDKWords(Primitive page, String text) {
         String not_found_pattern = "  sözü bulunamadı.";
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
-        String stext = "";
-        String pattern = "[1-9]\\..*<br>";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m;
-        try {// Now create matcher object.
-            m = r.matcher(text);
-            try {
-                while (m.find()) {
-                    stext += m.group() + " ";
-                }
-            } catch (IllegalStateException e) {
-                System.out.println("Böyle bir sayfa yok.");
-            }
-        } catch (NullPointerException ne) {
-            Log.d("null", page.getName());
-        }
+
         //System.out.println(stext);
 
         List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(stext);
