@@ -2,5 +2,10 @@
     <string name="app_name">chirp</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="log_out">Log Out from Twitter</string>
+    <string name="settings">Ontology Settings</string>
+    <string name="statistics">Show Statistics</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -6,19 +6,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-// Fragmentleri tablı yapıya yerleştirmek için adaptör
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     ArrayList<Fragment> fragments = new ArrayList<>();
-    ArrayList<String> tabTitles = new ArrayList<>();
+    ArrayList<String> titles = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void addFragment(Fragment fragments, String titles) {
-        this.fragments.add(fragments);
-        this.tabTitles.add(titles);
+    public void addFragment(Fragment fragment, String title) {
+        fragments.add(fragment);
+        titles.add(title);
     }
 
     @Override
@@ -27,12 +26,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-        return tabTitles.get(position);
+    public int getCount() {
+        return fragments.size();
     }
 
     @Override
-    public int getCount() {
-        return fragments.size();
+    public CharSequence getPageTitle(int position) {
+        return titles.get(position);
     }
 }

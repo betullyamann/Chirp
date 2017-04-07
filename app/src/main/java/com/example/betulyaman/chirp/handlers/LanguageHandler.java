@@ -53,7 +53,7 @@ public class LanguageHandler {
 
         //System.out.println(stext);
 
-        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(stext);
+        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(text);
         for (int i = 0; i < analizDizisi.size(); i++) {
             if (analizDizisi.get(i).tip == YaziBirimiTipi.KELIME) {
                 try {
