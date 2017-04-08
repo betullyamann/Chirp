@@ -1,0 +1,15 @@
+ana ekranda drawer layoutumuz var
+drawer layout bize sağ menüyü sağlayan yapı
+drawer layoutun içinde framelayout var
+frame layoutun içine bir adet fragment tutturuyoruz
+bu fragmentin içinde tab layout ve view pager var
+bunlar fragmentin içine yeni fragmentler koymaya yarıyor
+
+---- ---
+
+aşağıya çekince yenileme ekleyebilmek için
+tweetleri görüntüleyeceğimiz fragmentlerin içinde swiperefresh layout
+onun içinde de bir adet list view olması lazım
+list viewı da tweetleri koyacağız
+herhangi bir tweet listesini aşağıya çekince bütün fragmentler yok edilecek
+yeni tweetler alınıp kategorize edilip yeni fragmentler oluşturulup tekrar ekrana koyulacak
