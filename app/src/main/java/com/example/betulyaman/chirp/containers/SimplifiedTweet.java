@@ -20,9 +20,9 @@ public class SimplifiedTweet {
     }
 
     public SimplifiedTweet(Tweet tweet) {
-        this.name = tweet.user.name;
-        this.handle = tweet.user.screenName;
-        this.text = tweet.text;
+        name = tweet.user.name;
+        handle = tweet.user.screenName;
+        text = tweet.text;
         words = new ArrayList<>();
         belongsToACategory = false;
     }
@@ -61,4 +61,8 @@ public class SimplifiedTweet {
         belongsToACategory = true;
     }
 
+    @Override
+    public String toString() {
+        return name + " (" + handle + ") :  " + text;
+    }
 }

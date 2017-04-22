@@ -13,25 +13,25 @@ import java.util.ArrayList;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private final static String DATABASE_NAME = "CATEGORIES";
-    private final static Integer DATABASE_VERSION = 1;
-    private final static String LOG_TAG = "Database Handler";
+    private static final String DATABASE_NAME = "CATEGORIES";
+    private static final Integer DATABASE_VERSION = 1;
+    private static final String LOG_TAG = "Database Handler";
 
-    private final static String TABLE_NAME_CATEGORY = "CATEGORY";
-    private final static String TABLE_NAME_ENTRY = "ENTRY";
+    private static final String TABLE_NAME_CATEGORY = "CATEGORY";
+    private static final String TABLE_NAME_ENTRY = "ENTRY";
 
-    private final static String CATEGORY_COL_NAME = "NAME";
+    private static final String CATEGORY_COL_NAME = "NAME";
 
-    private final static String ENTRY_COL_CATEGORY_ID = "CATEGORY_ID";
-    private final static String ENTRY_COL_WORD = "WORD";
-    private final static String ENTRY_COL_WEIGHT = "WEIGHT";
+    private static final String ENTRY_COL_CATEGORY_ID = "CATEGORY_ID";
+    private static final String ENTRY_COL_WORD = "WORD";
+    private static final String ENTRY_COL_WEIGHT = "WEIGHT";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public Long putCategory(String name) {
-        SQLiteDatabase database = this.getWritableDatabase();
+        SQLiteDatabase database = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(CATEGORY_COL_NAME, name);
@@ -43,7 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void putEntry(Long categoryID, String word, Integer weight) {
-        SQLiteDatabase database = this.getWritableDatabase();
+        SQLiteDatabase database = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(ENTRY_COL_CATEGORY_ID, categoryID);
@@ -147,12 +147,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_NAME_CATEGORY
-                + " (" + CATEGORY_COL_NAME + " VARCHAR(20) UNIQUE NOT NULL);");
-        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY
-                + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER PRIMARY KEY, "
-                + ENTRY_COL_WORD + " INTEGER PRIMARY KEY, "
-                + ENTRY_COL_WEIGHT + " INTEGER NOT NULL) WITHOUT ROWID;");
+        db.execSQL("CREATE TABLE " + TABLE_NAME_CATEGORY + " (" + CATEGORY_COL_NAME + " VARCHAR(20) UNIQUE NOT NULL);");
+        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER, "
+                + ENTRY_COL_WORD + " INTEGER, " + ENTRY_COL_WEIGHT + " INTEGER NOT NULL);");
     }
 
     @Override

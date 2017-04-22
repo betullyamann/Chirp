@@ -1,5 +1,7 @@
 package com.example.betulyaman.chirp.handlers;
 
+import android.util.Log;
+
 import com.example.betulyaman.chirp.containers.FrequencyWrapper;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
@@ -42,7 +44,7 @@ public class LanguageHandler {
         }
 
         for (SimplifiedTweet t : tweets) {
-            System.out.println("ParsedTweet: " + t.getText());
+            Log.i("ParsedTweet", t.getText());
         }
     }
 
@@ -67,7 +69,7 @@ public class LanguageHandler {
         }
 
         for (String s : page.getTerms()) {
-            System.out.println("TDK " + s);
+            Log.i("TDK", s);
         }
 
     }
@@ -101,7 +103,7 @@ public class LanguageHandler {
         page.setLinks(null);
 
         for (int i = 0; i < page.getReferences().size(); i++) {
-            System.out.println("referans: " + page.getReferences().get(i));
+            Log.i("referans", page.getReferences().get(i));
         }
     }
 
@@ -118,11 +120,11 @@ public class LanguageHandler {
                 if (analizDizisi.get(i).tip == YaziBirimiTipi.KELIME) {
                     if (zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
                         //Bu key daha önce eklendi mi diye kontrol ediyor.
-                        String str = (zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().icerik());
+                        String str = zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().icerik();
                         int j = 0;
                         int index = -1;
                         //System.out.println(str);
-                        while ((j < frequencies.size())) {
+                        while (j < frequencies.size()) {
                             if (str.equals(frequencies.get(j).getWord())) {
                                 index = j;
                             }
@@ -157,7 +159,7 @@ public class LanguageHandler {
         }
         //System.out.println(frequencies.size());
         for (i = 0; i < frequencies.size(); i++) {
-            System.out.println("word: " + frequencies.get(i).getWord() + " frekans: " + frequencies.get(i).getFrequency());
+            Log.i("word-freq", frequencies.get(i).getWord() + " - " + frequencies.get(i).getFrequency());
         }
         page.setFrequencies(frequencies);
     }

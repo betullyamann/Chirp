@@ -34,4 +34,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return titles.get(position);
     }
+
+    public TweetFragment getTitleFragment(String title) {
+        return (TweetFragment) fragments.get(titles.indexOf(title));
+    }
 }

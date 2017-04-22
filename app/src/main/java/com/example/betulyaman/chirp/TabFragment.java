@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 
 import com.example.betulyaman.chirp.R.id;
 import com.example.betulyaman.chirp.R.layout;
+import com.example.betulyaman.chirp.containers.Category;
+import com.example.betulyaman.chirp.handlers.CategorizationHandler;
+
+import java.util.ArrayList;
 
 public class TabFragment extends Fragment {
 
-
-    private static final int int_items = 3;
+    ViewPagerAdapter viewPagerAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -23,25 +26,37 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate tab_layout and setup Views.
-        View x = inflater.inflate(layout.layout_tab, null);
-        tabLayout = (TabLayout) x.findViewById(id.layout_tab);
-        viewPager = (ViewPager) x.findViewById(id.pager_view);
+        View view = inflater.inflate(layout.layout_tab, null);
+        tabLayout = (TabLayout) view.findViewById(id.layout_tab);
+        viewPager = (ViewPager) view.findViewById(id.pager_view);
 
+        // Set an Adapter for the View Pager
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        // Set an Apater for the View Pager
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
-        viewPagerAdapter.addFragment(new HomeFragment(), "Home");
-        viewPagerAdapter.addFragment(new TopFreeFragment(), "Top Free");
-        viewPagerAdapter.addFragment(new TopPaidFragment(), "Top Paid");
+        //for(String category : new DatabaseHandler(getActivity().getApplicationContext()).getCategoryNames()){
+        //    viewPagerAdapter.addFragment(new TweetFragment(), category);
+        //}
+
         viewPager.setAdapter(viewPagerAdapter);
 
-        // Now, this is a workaround. The setupWithViewPager dose't works without the runnable. Maybe a Support Library Bug.
+        // Now, this is a workaround. The setupWithViewPager doesn't works without the runnable. Maybe a Support Library Bug.
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
                 tabLayout.setupWithViewPager(viewPager);
             }
         });
-        return x;
+
+        populateFragments();
+
+        return view;
+    }
+
+    public void populateFragments() {
+        ArrayList<Category> categories = CategorizationHandler.start(getActivity().getApplicationContext());
+
+        for (Category category : categories) {
+            viewPagerAdapter.getTitleFragment(category.getName()).setListToView(category.getTweets());
+        }
     }
 }
