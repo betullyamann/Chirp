@@ -6,13 +6,6 @@ import com.example.betulyaman.chirp.containers.FrequencyWrapper;
 import com.example.betulyaman.chirp.containers.Primitive;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
 
-import net.zemberek.araclar.turkce.YaziBirimi;
-import net.zemberek.araclar.turkce.YaziBirimiTipi;
-import net.zemberek.araclar.turkce.YaziIsleyici;
-import net.zemberek.erisim.Zemberek;
-import net.zemberek.tr.yapi.TurkiyeTurkcesi;
-import net.zemberek.yapi.KelimeTipi;
-
 import org.json.JSONException;
 
 import java.util.ArrayList;

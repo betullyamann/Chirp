@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/deneme.iml" filepath="$PROJECT_DIR$/deneme.iml" />
+      <module fileurl="file://E:\AndroidReviewProjects\chirp\app\app.iml" filepath="E:\AndroidReviewProjects\chirp\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chirp.iml" filepath="$PROJECT_DIR$/chirp.iml" />
+      <module fileurl="file://E:\AndroidReviewProjects\chirp\deneme.iml" filepath="E:\AndroidReviewProjects\chirp\deneme.iml" />
     </modules>
   </component>
 </project>
