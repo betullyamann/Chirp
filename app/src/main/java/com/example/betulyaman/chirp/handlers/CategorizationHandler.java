@@ -14,8 +14,8 @@ public class CategorizationHandler {
     private static final Integer THRESHOLD = 50;
 
     public static ArrayList<Category> start(Context context) {
-        ArrayList<SimplifiedTweet> tweets = ConnectionHandler.getTweets();
-        LanguageHandler.prepareTweet(tweets);
+        //ArrayList<SimplifiedTweet> tweets = ConnectionHandler.getTweets();
+        //LanguageHandler.prepareTweet(tweets);
         DatabaseHandler databaseHandler = new DatabaseHandler(context);
         ArrayList<Category> categories = new ArrayList<>();
 
@@ -27,8 +27,8 @@ public class CategorizationHandler {
             i++;
         }
 
-        distance(tweets, categories);
-        tweets = null; //Ram tasarrufu
+        //distance(tweets, categories);
+        //tweets = null; //Ram tasarrufu
 
         return categories;
     }

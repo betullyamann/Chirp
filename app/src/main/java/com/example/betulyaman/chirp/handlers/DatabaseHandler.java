@@ -95,7 +95,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return entries;
     }
 
+    public Integer getCategoryCount() {
+        String query = "SELECT  count() FROM " + TABLE_NAME_CATEGORY;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            return c.getInt(0);
+        } else {
+            return -1;
+        }
+    }
     //Verilen isimdeki kategoriyi siliyor
+
     public void deleteCategory(String categoryName) {
         SQLiteDatabase db = getWritableDatabase();
         String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + CATEGORY_COL_NAME + " = " + categoryName;

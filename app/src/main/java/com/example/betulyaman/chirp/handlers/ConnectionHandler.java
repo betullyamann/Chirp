@@ -2,9 +2,9 @@ package com.example.betulyaman.chirp.handlers;
 
 import android.util.Log;
 
-import com.example.betulyaman.chirp.containers.Primitive;
+import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
-import com.twitter.sdk.android.core.TwitterApiClient;
+import com.example.betulyaman.chirp.containers.WikiAvailability;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.StatusesService;
@@ -13,13 +13,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
 import retrofit2.Retrofit.Builder;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.GET;
@@ -28,67 +28,74 @@ import retrofit2.http.Query;
 
 public class ConnectionHandler {
 
-    protected static String getTDKPage(String query) {
-        Retrofit retrofit = new Builder().baseUrl("http://www.tdk.gov.tr/").addConverterFactory(ScalarsConverterFactory.create()).build();
-        ConnectionService connectionService = retrofit.create(ConnectionService.class);
-        Call<String> service = connectionService.getFromTDK("com_gts", "gts", query);
-        String response = "";
-        try {
-            String pattern = "[1-9]\\..*<br>";
-            Pattern r = Pattern.compile(pattern);
-            Matcher m = null;
-            try {// Now create matcher object.
-                m = r.matcher(service.execute().body());
-                try {
-                    while (m.find()) {
-                        response += m.group() + ' ';
-                    }
-                } catch (IllegalStateException e) {
-                    Log.e("CH-TDK", "Böyle bir sayfa yok.", e);
-                }
-            } catch (NullPointerException ne) {
-                Log.e("CH-TDK", "nullpointer", ne);
-            }
-        } catch (IOException e) {
-            Log.e("CH-TDK", "io", e);
-        }
-        return response;
+    private static final Integer MAX_TWEET_COUNT = 200;
+    private static final String TDK_TERM_PATTERN = "[1-9]\\..*<br>";
+
+    private final ConnectionService wikiService;
+    private final ConnectionService TDKService;
+    private final StatusesService statusesService;
+
+    public ConnectionHandler() {
+        wikiService = new Builder().baseUrl("http://tr.wikipedia.org/").addConverterFactory(ScalarsConverterFactory.create()).build().create(ConnectionService.class);
+        TDKService = new Builder().baseUrl("http://www.tdk.gov.tr/").addConverterFactory(ScalarsConverterFactory.create()).build().create(ConnectionService.class);
+        statusesService = TwitterCore.getInstance().getApiClient().getStatusesService();
     }
 
-    protected static Primitive getWikiPage(String query) {
-        Primitive page = new Primitive(query);
-        Retrofit retrofit = new Builder().baseUrl("http://tr.wikipedia.org/").addConverterFactory(ScalarsConverterFactory.create()).build();
-        ConnectionService connectionService = retrofit.create(ConnectionService.class);
-        Call<String> service = connectionService.getFromWiki("parse", "json", "wikitext|links", "1", query);
+    protected void getTDKPage(Node node) {
+        String query = node.getName();
+        Call<String> service = TDKService.getFromTDK("com_gts", "gts", query);
+        StringBuilder response = new StringBuilder();
+
+        try {// Now create matcher object.
+            Matcher matcher = Pattern.compile(TDK_TERM_PATTERN).matcher(service.execute().body());
+            try {
+                while (matcher.find()) {
+                    response.append(matcher.group()).append(' ');
+                }
+            } catch (IllegalStateException e) {
+                response.append(' ');
+                Log.e("CH-TDK", "Böyle bir sayfa yok.", e);
+            }
+        } catch (NullPointerException e) {
+            Log.e("CH-TDK", "nullpointer", e);
+        } catch (ProtocolException e) {
+            Log.e("CH-TDK", "TOO MANY TDK REQUESTS, TDK SERVERS ARE HURT", e);
+        } catch (IOException e) {
+            Log.e("CH-TDK", "IO", e);
+        }
+        node.setTDKResponse(response.toString());
+    }
+
+    protected void getWikiPage(Node node, WikiAvailability test) {
+        String query = node.getName();
+        Call<String> request = wikiService.getFromWiki("parse", "json", "wikitext|links", "1", query);
 
         try {
-            JSONObject obj = new JSONObject(service.execute().body());
-            obj = obj.getJSONObject("parse");
-            page.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
-            obj = obj.getJSONObject("wikitext");
-            page.setWikitext(obj.getString("*"));
+            JSONObject obj = new JSONObject(request.execute().body());
+            if (obj.has("parse")) {
+                obj = obj.getJSONObject("parse");
+                node.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
+                obj = obj.getJSONObject("wikitext");
+                node.setWikiText(obj.getString("*"));
+                test.setAvailable();
+            }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        return page;
     }
 
     //Twittera erişilerek tweetler alınıyor
-    protected static ArrayList<SimplifiedTweet> getTweets() {
+    protected ArrayList<SimplifiedTweet> getTweets() {
         ArrayList<SimplifiedTweet> tweets = new ArrayList<>();
-        TwitterCore twitter = TwitterCore.getInstance();
-        TwitterApiClient tac = twitter.getApiClient();
-        StatusesService statusesService = tac.getStatusesService();
-        Call<List<Tweet>> call = statusesService.homeTimeline(200, null, null, null, null, null, null);
+        Call<List<Tweet>> request = statusesService.homeTimeline(MAX_TWEET_COUNT, null, null, null, null, null, null);
         try {
-            List<Tweet> result = call.execute().body();
+            List<Tweet> result = request.execute().body();
             for (Tweet tweet : result) {
                 tweets.add(new SimplifiedTweet(tweet));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return tweets;
     }
 

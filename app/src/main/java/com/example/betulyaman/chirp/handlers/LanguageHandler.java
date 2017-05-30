@@ -1,9 +1,6 @@
 package com.example.betulyaman.chirp.handlers;
 
-import android.util.Log;
-
-import com.example.betulyaman.chirp.containers.FrequencyWrapper;
-import com.example.betulyaman.chirp.containers.Primitive;
+import com.example.betulyaman.chirp.containers.Node;
 import com.example.betulyaman.chirp.containers.SimplifiedTweet;
 
 import net.zemberek.araclar.turkce.YaziBirimi;
@@ -11,56 +8,80 @@ import net.zemberek.araclar.turkce.YaziBirimiTipi;
 import net.zemberek.araclar.turkce.YaziIsleyici;
 import net.zemberek.erisim.Zemberek;
 import net.zemberek.tr.yapi.TurkiyeTurkcesi;
+import net.zemberek.yapi.Kelime;
 import net.zemberek.yapi.KelimeTipi;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 
 public class LanguageHandler {
 
-    private static final int FREQUENCY_THRESHOLD = 2;
+    private static final Integer FREQUENCY_THRESHOLD = 2;
+    private static final ArrayList<String> STOP_WORDS = new ArrayList<>(Arrays.asList("a", "acaba", "altı", "altmış", "ama", "ancak",
+            "arada", "artık", "asla", "aslında", "aslında", "ayrıca", "az", "bana", "bazen", "bazı", "bazıları", "belki", "ben",
+            "benden", "beni", "benim", "beri", "beş", "bile", "bilhassa", "bin", "bir", "biraz", "birçoğu", "birçok", "biri", "birisi",
+            "birkaç", "birşey", "biz", "bizden", "bize", "bizi", "bizim", "böyle", "böylece", "bu", "buna", "bunda", "bundan", "bunlar",
+            "bunları", "bunların", "bunu", "bunun", "burada", "bütün", "çoğu", "çoğunu", "çok", "çünkü", "da", "daha", "dahi", "dan",
+            "de", "defa", "değil", "diğer", "diğeri", "diğerleri", "diye", "doksan", "dokuz", "dolayı", "dolayısıyla", "dört", "e",
+            "edecek", "eden", "ederek", "edilecek", "ediliyor", "edilmesi", "ediyor", "eğer", "elbette", "elli", "en", "etmesi", "etti",
+            "ettiği", "ettiğini", "fakat", "falan", "filan", "gene", "gereği", "gerek", "gibi", "göre", "hala", "halde", "halen", "hangi",
+            "hangisi", "hani", "hatta", "hem", "henüz", "hep", "hepsi", "her", "herhangi", "herkes", "herkese", "herkesi", "herkesin",
+            "hiç", "hiçbir", "hiçbiri", "i", "ı", "için", "içinde", "iki", "ile", "ilgili", "ise", "işte", "itibaren", "itibariyle",
+            "kaç", "kadar", "karşın", "kendi", "kendilerine", "kendine", "kendini", "kendisi", "kendisine", "kendisini", "kez", "ki",
+            "kim", "kime", "kimi", "kimin", "kimisi", "kimse", "kırk", "madem", "mi", "mı", "milyar", "milyon", "mu", "mü", "nasıl",
+            "ne", "neden", "nedenle", "nerde", "nerede", "nereye", "neyse", "niçin", "nin", "nın", "niye", "nun", "nün", "o", "öbür",
+            "olan", "olarak", "oldu", "olduğu", "olduğunu", "olduklarını", "olmadı", "olmadığı", "olmak", "olması", "olmayan", "olmaz",
+            "olsa", "olsun", "olup", "olur", "olur", "olursa", "oluyor", "on", "ön", "ona", "önce", "ondan", "onlar", "onlara", "onlardan",
+            "onları", "onların", "onu", "onun", "orada", "öte", "ötürü", "otuz", "öyle", "oysa", "pek", "rağmen", "sana", "sanki", "sanki",
+            "şayet", "şekilde", "sekiz", "seksen", "sen", "senden", "seni", "senin", "şey", "şeyden", "şeye", "şeyi", "şeyler", "şimdi",
+            "siz", "siz", "sizden", "sizden", "size", "sizi", "sizi", "sizin", "sizin", "sonra", "şöyle", "şu", "şuna", "şunları",
+            "şunu", "ta", "tabii", "tam", "tamam", "tamamen", "tarafından", "trilyon", "tüm", "tümü", "u", "ü", "üç", "un", "ün", "üzere",
+            "var", "vardı", "ve", "veya", "ya", "yani", "yapacak", "yapılan", "yapılması", "yapıyor", "yapmak", "yaptı", "yaptığı",
+            "yaptığını", "yaptıkları", "ye", "yedi", "yerine", "yetmiş", "yi", "yı", "yine", "yirmi", "yoksa", "yu", "yüz", "zaten", "zira"));
+    Zemberek zemberek;
 
-    public static void prepareTweet(ArrayList<SimplifiedTweet> tweets) {
+    public LanguageHandler() {
+        zemberek = new Zemberek(new TurkiyeTurkcesi());
+    }
 
-        Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
+    public void parseTweets(ArrayList<SimplifiedTweet> tweets) {
 
         for (SimplifiedTweet tweet : tweets) {
             List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(tweet.getText());
-            for (int j = 0; j < analizDizisi.size(); j++) {
+            for (YaziBirimi birim : analizDizisi) {
                 try {
-                    if (analizDizisi.get(j).tip == YaziBirimiTipi.KELIME) {
-
-                        if (zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
-                            tweet.addWord(zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().icerik());
+                    if (birim.tip == YaziBirimiTipi.KELIME) {
+                        Kelime[] kelimeDizisi = zemberek.kelimeCozumle(birim.icerik);
+                        if (Objects.equals(kelimeDizisi[0].kok().tip(), KelimeTipi.ISIM) && !tweet.getWords().contains(kelimeDizisi[0].kok().icerik())) {
+                            tweet.addWord(kelimeDizisi[0].kok().icerik());
                         }
                     }
                 } catch (IndexOutOfBoundsException e) {
                     // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
                 }
             }
-        }
-
-        for (SimplifiedTweet t : tweets) {
-            Log.i("ParsedTweet", t.getText());
+            tweet.getWords().removeAll(STOP_WORDS);
         }
     }
 
     //TDK'dan dönen sayfayı temizleyerek isimleri words dizisine atıyor.
-    public static void getTDKWords(Primitive page, String text) {
+    public void parseTerms(Node node) {
         String not_found_pattern = "  sözü bulunamadı.";
-        Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
 
-        //System.out.println(stext);
-
-        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(text);
-        for (int i = 0; i < analizDizisi.size(); i++) {
-            if (analizDizisi.get(i).tip == YaziBirimiTipi.KELIME) {
+        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(node.getTDKResponse());
+        for (YaziBirimi birim : analizDizisi) {
+            if (birim.tip == YaziBirimiTipi.KELIME) {
+                Kelime[] kelimeDizisi = zemberek.kelimeCozumle(birim.icerik);
                 try {
-                    if (zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
-                        page.getTerms().add(zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().icerik());
+                    if (Objects.equals(kelimeDizisi[0].kok().tip(), KelimeTipi.ISIM) && !node.getTerms().contains(kelimeDizisi[0].kok().icerik())) {
+                        node.getTerms().add(kelimeDizisi[0].kok().icerik());
                     }
                 } catch (IndexOutOfBoundsException e) {
                     // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
@@ -68,103 +89,68 @@ public class LanguageHandler {
             }
         }
 
-        for (String s : page.getTerms()) {
-            Log.i("TDK", s);
-        }
-
+        node.getTerms().removeAll(STOP_WORDS);
+        node.setTDKResponse("");
     }
 
     //Wikipedia'dan gelen referansları temizleyerek isim olanları references dizisini atıyor.
-    public static void getPageReferences(Primitive page) {
-
-        Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
-
+    public void parseReferences(Node node) {
         try {
-            for (int i = 0; i < page.getLinksLength(); i++) {
-                List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(page.getLink(i));
-                for (int j = 0; j < analizDizisi.size(); j++) {
-                    try {
-                        if (analizDizisi.get(j).tip == YaziBirimiTipi.KELIME) {
-
-                            if (zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
-                                page.getReferences().add(zemberek.kelimeCozumle(analizDizisi.get(j).icerik)[0].kok().icerik());
-                            }
+            StringBuilder temp = new StringBuilder();
+            for (int i = 0; i < node.getLinksLength(); i++) {
+                temp.append(node.getLinks().get(i) + " ");
+            }
+            List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(temp.toString());
+            temp = null;
+            for (YaziBirimi birim : analizDizisi) {
+                try {
+                    if (birim.tip == YaziBirimiTipi.KELIME) {
+                        Kelime[] kelimeDizisi = zemberek.kelimeCozumle(birim.icerik);
+                        if (Objects.equals(KelimeTipi.ISIM, kelimeDizisi[0].kok().tip()) && !node.getReferences().contains(kelimeDizisi[0].kok().icerik())) {
+                            node.getReferences().add(kelimeDizisi[0].kok().icerik());
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
                     }
+                } catch (IndexOutOfBoundsException e) {
+                    // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
                 }
             }
+
+            node.getReferences().removeAll(STOP_WORDS);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // Donen cevaplar islendikten sonra siliniyor. RAM tasarrufu.
-        page.setLinks(null);
-
-        for (int i = 0; i < page.getReferences().size(); i++) {
-            Log.i("referans", page.getReferences().get(i));
-        }
+        node.setLinks(new JSONArray());
     }
 
     // Kelimelerin frekanslari bulunuyor.
-    public static void getPageWordFrequencies(Primitive page) {
-
-        Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
-        ArrayList<FrequencyWrapper> frequencies = new ArrayList<>();
-        frequencies.add(new FrequencyWrapper("*"));
-
-        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(page.getWikitext());
-        for (int i = 0; i < analizDizisi.size(); i++) {
+    public void parseFrequencies(Node node) {
+        List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(node.getWikiText());
+        for (YaziBirimi birim : analizDizisi) {
             try {
-                if (analizDizisi.get(i).tip == YaziBirimiTipi.KELIME) {
-                    if (zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().tip() == KelimeTipi.ISIM) {
-                        //Bu key daha önce eklendi mi diye kontrol ediyor.
-                        String str = zemberek.kelimeCozumle(analizDizisi.get(i).icerik)[0].kok().icerik();
-                        int j = 0;
-                        int index = -1;
-                        //System.out.println(str);
-                        while (j < frequencies.size()) {
-                            if (str.equals(frequencies.get(j).getWord())) {
-                                index = j;
-                            }
-                            // System.out.println("WHILE " + j);
-                            j++;
-                            // System.out.println("ELELELE " + j);
-                        }
-                        //System.out.println("!!!!!!! " + j);
-                        if (index == -1) {
-                            //System.out.println("THEN !!!!!!!!!!");
-                            frequencies.add(new FrequencyWrapper(str));
-                        } else {
-                            //System.out.println("ELSE !!!!!!!!!");
-                            frequencies.get(index).incrementFrequency();
-                        }
+                if (birim.tip == YaziBirimiTipi.KELIME) {
+                    Kelime[] kelimeDizisi = zemberek.kelimeCozumle(birim.icerik);
+                    if (Objects.equals(kelimeDizisi[0].kok().tip(), KelimeTipi.ISIM) || !STOP_WORDS.contains(kelimeDizisi[0].kok().icerik())) {
+                        node.updateFrequencies(kelimeDizisi[0].kok().icerik());
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
                 // Zemberek'in cozumleyemedigi kelimeler catch'e dusuyor
             }
-
         }
 
-        int i = 0;
-        //Frekans değeri esik degerden kucuk olanlar siliniyor
-        while (i < frequencies.size()) {
-            if (frequencies.get(i).getFrequency() <= FREQUENCY_THRESHOLD) {
-                frequencies.remove(i);
-            } else {
-                i++;
+        Iterator<Integer> iterator = node.getFrequencies().values().iterator();
+
+        while (iterator.hasNext()) {
+            Integer temp = iterator.next();
+            if (temp < FREQUENCY_THRESHOLD) {
+                iterator.remove();
             }
         }
-        //System.out.println(frequencies.size());
-        for (i = 0; i < frequencies.size(); i++) {
-            Log.i("word-freq", frequencies.get(i).getWord() + " - " + frequencies.get(i).getFrequency());
-        }
-        page.setFrequencies(frequencies);
+
+        node.setWikiText("");
     }
-
-
 }
 
 

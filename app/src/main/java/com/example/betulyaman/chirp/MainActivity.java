@@ -2,24 +2,17 @@ package com.example.betulyaman.chirp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.betulyaman.chirp.R.id;
 import com.example.betulyaman.chirp.R.layout;
-import com.example.betulyaman.chirp.R.string;
 import com.example.betulyaman.chirp.handlers.OntologyHandler;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
@@ -53,16 +46,70 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(getApplicationContext(), new Twitter(authConfig));
+/*
+
+        Thread initializationThread = new Thread() {
+            @Override
+            public void run() {
+                DatabaseHandler databaseHandler = new DatabaseHandler(getApplicationContext());
+                Log.i("TEST", "TEST");
+                if (databaseHandler.getCategoryCount() == 0) {
+                    OntologyHandler.createOnthology("spor ", getApplicationContext());
+                }
+            }
+        };
+
+        initializationThread.start();
+
+        if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
+            System.out.println("Not logged in... hmmm...");
+            final Activity activity = this;
+            loginButton = new TwitterLoginButton(activity) {
+                @Override
+                protected Activity getActivity() {
+                    System.out.println("Take this activity and make it yours.");
+                    return activity;
+                }
+            };
+
+            loginButton.setCallback(new Callback<TwitterSession>() {
+                @Override
+                public void success(Result<TwitterSession> result) {
+                    System.out.println("SUCCESS!!!");
+                    TwitterSession session = result.data;
+                    // TODO: Remove toast and use the TwitterSession's userID
+                    // with your app's user model
+                    String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void failure(TwitterException exception) {
+                    Log.d("TwitterKit", "Login with Twitter failure", exception);
+                }
+            });
+            loginButton.performClick();
+            System.out.println("login finished.");
+        } else {
+            System.out.println("already logged in m8");
+            System.out.println(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserName() + " is logged in");
+        }
+
+        try {
+            initializationThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+*/
 
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(getApplicationContext(), new Twitter(authConfig));
+        new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Sanat")).start();
 
-        twitterLogin();
-        Log.i("TEST", "TEST");
-
+/*
         drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);
         navigationView = (NavigationView) findViewById(id.view_navigation);
 
@@ -89,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(id.toolbar);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, string.app_name, string.app_name);
         drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+        drawerToggle.syncState();*/
     }
 
     private void twitterLogin() {
@@ -97,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "User " + TwitterCore.getInstance().getSessionManager().getActiveSession().getUserName() + " is logged in.", Toast.LENGTH_LONG).show();
 
         } else {
-            final Activity activity = this;
+            Activity activity = this;
             loginButton = new TwitterLoginButton(activity) {
                 @Override
                 protected Activity getActivity() {
@@ -133,14 +180,5 @@ public class MainActivity extends AppCompatActivity {
         // Make sure that the loginButton hears the result from any
         // Activity that it triggered.
         loginButton.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private class MyTask extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... voids) {
-            OntologyHandler.start();
-
-            return null;
-        }
     }
 }

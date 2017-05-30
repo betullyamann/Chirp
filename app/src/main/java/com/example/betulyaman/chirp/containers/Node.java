@@ -1,64 +1,93 @@
 package com.example.betulyaman.chirp.containers;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Node {
     private final String name;
-    private ArrayList<Node> adjacentNodes;
-    private ArrayList<Integer> bindStrength;
-    private Primitive primitive;
+    private String wikiText;
+    private JSONArray links;
+    private String TDKResponse;
+    private ArrayList<String> references;
+    private HashMap<String, Integer> frequencies;
+    private ArrayList<String> terms;
 
     public Node(String name) {
         this.name = name;
-        adjacentNodes = new ArrayList<>();
-        bindStrength = new ArrayList<>();
-    }
-
-    public Primitive getPrimitive() {
-        return primitive;
-    }
-
-    public void setPrimitive(Primitive primitive) {
-        this.primitive = primitive;
+        references = new ArrayList<>();
+        frequencies = new HashMap<>();
+        terms = new ArrayList<>();
     }
 
     public String getName() {
         return name;
     }
 
-    public Node getAdjacent(Integer index) {
-        return adjacentNodes.get(index);
+    public String getWikiText() {
+        return wikiText;
     }
 
-    public ArrayList<Node> getAdjacentNodes() {
-
-        return adjacentNodes;
+    public void setWikiText(String wikiText) {
+        this.wikiText = wikiText;
     }
 
-    public Integer getStrength(Integer index) {
-        return bindStrength.get(index);
+    public JSONArray getLinks() throws JSONException {
+        return links;
     }
 
-    public void addAdjacent(Node node, Integer strength) {
-        adjacentNodes.add(node);
-        bindStrength.add(strength);
+    public void setLinks(JSONArray links) {
+        this.links = links;
     }
 
-    public Integer getAdjacentCount() {
-        return adjacentNodes.size();
+    public String getTDKResponse() {
+        return TDKResponse;
     }
 
-    // İncelenen düğümün belirtilen isme sahip nodunun olup olmadığını kontrol ediyor.
-    public Boolean isAdjacent(String name) {
-        int i = 0;
-        while (!adjacentNodes.get(i).getName().equals(name) && i < adjacentNodes.size()) {
-            i++;
-        }
-        if (i == adjacentNodes.size()) {
-            return false;
-        } else {
+    public void setTDKResponse(String TDKResponse) {
+        this.TDKResponse = TDKResponse;
+    }
+
+    public Integer getLinksLength() {
+        return links.length();
+    }
+
+    public ArrayList<String> getReferences() {
+        return references;
+    }
+
+    public void setReferences(ArrayList<String> references) {
+        this.references = references;
+    }
+
+    public HashMap<String, Integer> getFrequencies() {
+        return frequencies;
+    }
+
+    public void setFrequencies(HashMap<String, Integer> frequencies) {
+        this.frequencies = frequencies;
+    }
+
+    public Boolean updateFrequencies(String word) {
+        if (frequencies.containsKey(word)) {
+            Integer temp = frequencies.get(word);
+            frequencies.remove(word, temp);
+            frequencies.put(word, temp + 1);
             return true;
+        } else {
+            frequencies.put(word, 1);
+            return false;
         }
+    }
+
+    public ArrayList<String> getTerms() {
+        return terms;
+    }
+
+    public void setTerms(ArrayList<String> terms) {
+        this.terms = terms;
     }
 
 }
