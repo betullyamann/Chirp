@@ -1,12 +1,12 @@
 package info.chirpapp.chirp.containers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Category {
     private String name;
-    private ArrayList<VectorElement> words;
-    private ArrayList<SimplifiedTweet> tweets;
-    private ArrayList<Integer> points;
+    private HashMap<String, Integer> words;
+    private HashMap<SimplifiedTweet, Integer> tweets;
 
     public Category(String name) {
         this.name = name;
@@ -20,40 +20,29 @@ public class Category {
         this.name = name;
     }
 
-    public void addCategories(String ontology, ArrayList<VectorElement> entry) {
-        setWords(entry);
-    }
-
-    public ArrayList<VectorElement> getWords() {
+    public HashMap<String, Integer> getWords() {
         return words;
     }
 
-    public void setWords(ArrayList<VectorElement> words) {
+    public void setWords(HashMap<String, Integer> words) {
         this.words = words;
     }
 
-    public ArrayList<SimplifiedTweet> getTweets() {
+    public HashMap<SimplifiedTweet, Integer> getTweets() {
         return tweets;
     }
 
-    public void setTweets(ArrayList<SimplifiedTweet> tweets) {
+    public void setTweets(HashMap<SimplifiedTweet, Integer> tweets) {
         this.tweets = tweets;
     }
 
-    public ArrayList<Integer> getPoints() {
-        return points;
-    }
-
-    public void setPoints(ArrayList<Integer> points) {
-        this.points = points;
-    }
-
     public void addPoint(SimplifiedTweet tweet, Integer frequency) {
-        if (!tweets.contains(tweet)) {
+        if (tweets.containsKey(tweet)) {
+            tweets.put(tweet, tweets.get(tweet) + frequency);
+        } else {
+            tweets.put(tweet, frequency);
             tweet.setBelongingTrue();
-            tweets.add(tweet);
-            points.ensureCapacity(tweets.size());
         }
-        points.set(tweets.indexOf(tweet), points.get(tweets.indexOf(tweet)) + frequency);
+
     }
 }
