@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import info.chirpapp.chirp.R.id;
+import info.chirpapp.chirp.R.layout;
 import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 /**
@@ -29,14 +31,14 @@ public class TweetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //inflater-sisirmek
-        View view = inflater.inflate(info.chirpapp.betulyaman.chirp.R.layout.fragment_tweet, container, false);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.swipe_refresh_layout);
-        listView = (ListView) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.list_view);
+        View view = inflater.inflate(layout.fragment_tweet, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(id.swipe_refresh_layout);
+        listView = (ListView) view.findViewById(id.list_view);
         return view;
     }
 
     public void setListToView(ArrayList<SimplifiedTweet> tweets) {
-        listView.setAdapter(new ArrayAdapter<SimplifiedTweet>(getActivity().getApplicationContext(), info.chirpapp.betulyaman.chirp.R.layout.layout_tweet, tweets));
+        listView.setAdapter(new ArrayAdapter<SimplifiedTweet>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
     }
 
 }

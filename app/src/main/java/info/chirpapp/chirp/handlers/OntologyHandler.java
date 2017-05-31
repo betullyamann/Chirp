@@ -3,7 +3,6 @@ package info.chirpapp.chirp.handlers;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import info.chirpapp.chirp.containers.Node;
@@ -12,17 +11,25 @@ import info.chirpapp.chirp.containers.WikiAvailability;
 
 public class OntologyHandler {
 
+    private static final Integer REFREF = 1;
+    private static final Integer REFFRQ = 2;
+    private static final Integer REFTRM = 3;
+    private static final Integer FRQREF = 4;
+
+    // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
+    private static final Integer FRQFRQ = 5;
+    private static final Integer FRQTRM = 6;
+    private static final Integer TRMREF = 7;
+    private static final Integer TRMFRQ = 8;
+    private static final Integer TRMREM = 9;
     LanguageHandler languageHandler;
     ConnectionHandler connectionHandler;
     DatabaseHandler databaseHandler;
-
     public OntologyHandler(Context context) {
         connectionHandler = new ConnectionHandler();
         languageHandler = new LanguageHandler();
         databaseHandler = new DatabaseHandler(context);
     }
-
-    // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
 
     // Tag'e iliskin ontoloji olusturuluyor
     public void createOnthology(String tag) {
@@ -43,7 +50,16 @@ public class OntologyHandler {
         }
 
 
-        // TODO BURAYA BAK Bİ HELE
+        for (Node node : ontology.getNodes()) {
+            for (String ref : ontology.getRoot().getReferences()) {
+                if (node.getReferences().contains(ref)) {
+                    ontology.getWords().put(ref, REFREF);
+                }
+                if (node.getFrequencies().containsKey(ref)) {
+                    ontology.getWords().put(ref, REFFRQ);
+                }
+            }
+        }
 
         databaseHandler.putWholeCategory(ontology.getRoot().getName(), vectorize(ontology));
         Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");

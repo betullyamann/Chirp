@@ -21,6 +21,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import info.chirpapp.chirp.R.layout;
 import info.chirpapp.chirp.handlers.OntologyHandler;
 import io.fabric.sdk.android.Fabric;
 
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 */
 
         super.onCreate(savedInstanceState);
-        setContentView(info.chirpapp.betulyaman.chirp.R.layout.activity_main);
+        setContentView(layout.activity_main);
 
         new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Sanat")).start();
 
