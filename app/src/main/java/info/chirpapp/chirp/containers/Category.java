@@ -1,6 +1,4 @@
-package com.example.betulyaman.chirp.containers;
-
-import com.twitter.sdk.android.core.models.Tweet;
+package info.chirpapp.chirp.containers;
 
 import java.util.ArrayList;
 

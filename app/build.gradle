@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.6'
+        classpath 'io.fabric.tools:gradle:1.22.1'
     }
 }
 apply plugin: 'com.android.application'
@@ -17,9 +17,9 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
     defaultConfig {
-        applicationId 'info.chirpappproject.chirp'
+        applicationId 'info.chirpapp.chirp'
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1

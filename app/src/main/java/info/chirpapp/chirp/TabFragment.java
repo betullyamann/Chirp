@@ -1,4 +1,4 @@
-package com.example.betulyaman.chirp;
+package info.chirpapp.chirp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,12 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.betulyaman.chirp.R.id;
-import com.example.betulyaman.chirp.R.layout;
-import com.example.betulyaman.chirp.containers.Category;
-import com.example.betulyaman.chirp.handlers.CategorizationHandler;
-
 import java.util.ArrayList;
+
+import info.chirpapp.chirp.containers.Category;
+import info.chirpapp.chirp.handlers.CategorizationHandler;
 
 public class TabFragment extends Fragment {
 
@@ -26,9 +24,9 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate tab_layout and setup Views.
-        View view = inflater.inflate(layout.layout_tab, null);
-        tabLayout = (TabLayout) view.findViewById(id.layout_tab);
-        viewPager = (ViewPager) view.findViewById(id.pager_view);
+        View view = inflater.inflate(info.chirpapp.betulyaman.chirp.R.layout.layout_tab, null);
+        tabLayout = (TabLayout) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.layout_tab);
+        viewPager = (ViewPager) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.pager_view);
 
         // Set an Adapter for the View Pager
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());

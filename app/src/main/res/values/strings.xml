@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">chirp</string>
+    <string name="app_name">Chirp</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="drawer_open">Open Drawer</string>

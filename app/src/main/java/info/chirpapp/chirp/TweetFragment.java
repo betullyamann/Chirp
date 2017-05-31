@@ -1,4 +1,4 @@
-package com.example.betulyaman.chirp;
+package info.chirpapp.chirp;
 
 
 import android.os.Bundle;
@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.betulyaman.chirp.R.id;
-import com.example.betulyaman.chirp.R.layout;
-import com.example.betulyaman.chirp.containers.SimplifiedTweet;
-
 import java.util.ArrayList;
+
+import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,14 +29,14 @@ public class TweetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //inflater-sisirmek
-        View view = inflater.inflate(layout.fragment_tweet, container, false);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(id.swipe_refresh_layout);
-        listView = (ListView) view.findViewById(id.list_view);
+        View view = inflater.inflate(info.chirpapp.betulyaman.chirp.R.layout.fragment_tweet, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.swipe_refresh_layout);
+        listView = (ListView) view.findViewById(info.chirpapp.betulyaman.chirp.R.id.list_view);
         return view;
     }
 
     public void setListToView(ArrayList<SimplifiedTweet> tweets) {
-        listView.setAdapter(new ArrayAdapter<SimplifiedTweet>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
+        listView.setAdapter(new ArrayAdapter<SimplifiedTweet>(getActivity().getApplicationContext(), info.chirpapp.betulyaman.chirp.R.layout.layout_tweet, tweets));
     }
 
 }

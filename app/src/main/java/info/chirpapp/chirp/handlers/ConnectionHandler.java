@@ -1,10 +1,7 @@
-package com.example.betulyaman.chirp.handlers;
+package info.chirpapp.chirp.handlers;
 
 import android.util.Log;
 
-import com.example.betulyaman.chirp.containers.Node;
-import com.example.betulyaman.chirp.containers.SimplifiedTweet;
-import com.example.betulyaman.chirp.containers.WikiAvailability;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.StatusesService;
@@ -19,6 +16,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import info.chirpapp.chirp.containers.Node;
+import info.chirpapp.chirp.containers.SimplifiedTweet;
+import info.chirpapp.chirp.containers.WikiAvailability;
 import retrofit2.Call;
 import retrofit2.Retrofit.Builder;
 import retrofit2.converter.scalars.ScalarsConverterFactory;

@@ -1,7 +1,4 @@
-package com.example.betulyaman.chirp.handlers;
-
-import com.example.betulyaman.chirp.containers.Node;
-import com.example.betulyaman.chirp.containers.SimplifiedTweet;
+package info.chirpapp.chirp.handlers;
 
 import net.zemberek.araclar.turkce.YaziBirimi;
 import net.zemberek.araclar.turkce.YaziBirimiTipi;
@@ -19,6 +16,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import info.chirpapp.chirp.containers.Node;
+import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 
 public class LanguageHandler {

@@ -1,4 +1,4 @@
-package com.example.betulyaman.chirp;
+package info.chirpapp.chirp;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.betulyaman.chirp.R.layout;
-import com.example.betulyaman.chirp.handlers.OntologyHandler;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -23,6 +21,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import info.chirpapp.chirp.handlers.OntologyHandler;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 */
 
         super.onCreate(savedInstanceState);
-        setContentView(layout.activity_main);
+        setContentView(info.chirpapp.betulyaman.chirp.R.layout.activity_main);
 
         new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Sanat")).start();
 

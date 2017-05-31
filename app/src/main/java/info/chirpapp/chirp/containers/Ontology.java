@@ -1,4 +1,4 @@
-package com.example.betulyaman.chirp.containers;
+package info.chirpapp.chirp.containers;
 
 import java.util.ArrayList;
 

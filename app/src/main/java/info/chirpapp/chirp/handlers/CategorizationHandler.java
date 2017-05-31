@@ -1,13 +1,12 @@
-package com.example.betulyaman.chirp.handlers;
+package info.chirpapp.chirp.handlers;
 
 import android.content.Context;
 
-import com.example.betulyaman.chirp.containers.Category;
-import com.example.betulyaman.chirp.containers.SimplifiedTweet;
-import com.example.betulyaman.chirp.containers.VectorElement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import info.chirpapp.chirp.containers.Category;
+import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 public class CategorizationHandler {
 

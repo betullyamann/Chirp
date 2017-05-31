@@ -1,14 +1,13 @@
-package com.example.betulyaman.chirp.handlers;
+package info.chirpapp.chirp.handlers;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.betulyaman.chirp.containers.Node;
-import com.example.betulyaman.chirp.containers.Ontology;
-import com.example.betulyaman.chirp.containers.VectorElement;
-import com.example.betulyaman.chirp.containers.WikiAvailability;
-
 import java.util.ArrayList;
+
+import info.chirpapp.chirp.containers.Node;
+import info.chirpapp.chirp.containers.Ontology;
+import info.chirpapp.chirp.containers.WikiAvailability;
 
 public class OntologyHandler {
 
