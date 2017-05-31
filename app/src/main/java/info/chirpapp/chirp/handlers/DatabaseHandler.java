@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -52,12 +54,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " with rowid " + insertedRowid + ".");
     }
 
-    public void putWholeCategory(String categoryName, ArrayList<VectorElement> elements) {
+    public void putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
         // TODO DROP CATEGORY FIRST
         Long categoryID = putCategory(categoryName);
 
-        for (VectorElement element : elements) {
-            putEntry(categoryID, element.getWord(), element.getFrequency());
+        for (Map.Entry<String,Integer> element : elements.entrySet()) {
+            putEntry(categoryID, element.getKey(), element.getValue());
         }
     }
 
@@ -79,15 +81,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return categories;
     }
 
-    public ArrayList<VectorElement> getEntries(String categoryName) {
-        ArrayList<VectorElement> entries = new ArrayList<>();
+    public HashMap<String, Integer>  getEntries(String categoryName) {
+        HashMap<String, Integer>  entries = new HashMap<>();
         String query = "SELECT " + ENTRY_COL_WORD + "," + ENTRY_COL_WEIGHT + " FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
 
         if (c.moveToFirst()) {
             do {
-                entries.add(new VectorElement(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT))));
+                entries.put(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT)));
             } while (c.moveToNext());
         }
         c.close();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import info.chirpapp.chirp.containers.Node;
 import info.chirpapp.chirp.containers.Ontology;
@@ -50,10 +51,10 @@ public class OntologyHandler {
 
     // Ontolojinin kelime vektörü çıkartılıyor.
     // Kelime vektöründe komşu kelimeler ve bu kelimelerin ontolojiyle olan bağlantısı tutuluyor.
-    public ArrayList<VectorElement> vectorize(Ontology ontology) {
-        ArrayList<VectorElement> vector = new ArrayList<>();
+    public HashMap<String, Integer> vectorize(Ontology ontology) {
+        HashMap<String, Integer> vector = new HashMap<>();
 
-        vector.add(new VectorElement(ontology.getRoot().getName(), 40));
+        vector.put(ontology.getRoot().getName(), 40);
         //TODO REWRITE VECTORIZE
 
 
