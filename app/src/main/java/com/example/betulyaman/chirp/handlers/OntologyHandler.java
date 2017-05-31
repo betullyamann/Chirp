@@ -43,6 +43,8 @@ public class OntologyHandler {
         }
 
 
+        // TODO BURAYA BAK Bİ HELE
+
         databaseHandler.putWholeCategory(ontology.getRoot().getName(), vectorize(ontology));
         Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
     }

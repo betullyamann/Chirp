@@ -55,6 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void putWholeCategory(String categoryName, ArrayList<VectorElement> elements) {
+        // TODO DROP CATEGORY FIRST
         Long categoryID = putCategory(categoryName);
 
         for (VectorElement element : elements) {
