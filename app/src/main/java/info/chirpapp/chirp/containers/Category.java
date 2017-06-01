@@ -1,6 +1,5 @@
 package info.chirpapp.chirp.containers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Category {

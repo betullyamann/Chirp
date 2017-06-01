@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.betulyaman.chirp.info.example.betulyaman.chirp.MainActivity"
+    tools:context="info.chirpapp.chirp.MainActivity"
     tools:openDrawer="start">
 
     <FrameLayout

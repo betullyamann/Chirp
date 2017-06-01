@@ -46,7 +46,7 @@ public class LanguageHandler {
             "şunu", "ta", "tabii", "tam", "tamam", "tamamen", "tarafından", "trilyon", "tüm", "tümü", "u", "ü", "üç", "un", "ün", "üzere",
             "var", "vardı", "ve", "veya", "ya", "ya da", "yani", "yapacak", "yapılan", "yapılması", "yapıyor", "yapmak", "yaptı", "yaptığı",
             "yaptığını", "yaptıkları", "ye", "yedi", "yerine", "yetmiş", "yi", "yı", "yine", "yirmi", "yoksa", "yu", "yüz", "zaten", "zira"));
-    Zemberek zemberek;
+    private final Zemberek zemberek;
 
     public LanguageHandler() {
         zemberek = new Zemberek(new TurkiyeTurkcesi());
@@ -99,7 +99,7 @@ public class LanguageHandler {
         try {
             StringBuilder temp = new StringBuilder();
             for (int i = 0; i < node.getLinksLength(); i++) {
-                temp.append(node.getLinks().get(i) + " ");
+                temp.append(node.getLinks().get(i)).append(" ");
             }
             List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(temp.toString());
             temp = null;

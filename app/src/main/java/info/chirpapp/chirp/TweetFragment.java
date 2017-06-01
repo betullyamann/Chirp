@@ -38,7 +38,7 @@ public class TweetFragment extends Fragment {
     }
 
     public void setListToView(ArrayList<SimplifiedTweet> tweets) {
-        listView.setAdapter(new ArrayAdapter<SimplifiedTweet>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
+        listView.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
     }
 
 }

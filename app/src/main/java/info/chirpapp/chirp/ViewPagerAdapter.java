@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    ArrayList<Fragment> fragments = new ArrayList<>();
-    ArrayList<String> titles = new ArrayList<>();
+    private final ArrayList<Fragment> fragments = new ArrayList<>();
+    private final ArrayList<String> titles = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

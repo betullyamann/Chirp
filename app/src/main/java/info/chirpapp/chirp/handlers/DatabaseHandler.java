@@ -37,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(CATEGORY_COL_NAME, name);
 
         Long insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
-        Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + ".");
+        Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
 
         return insertedRowid;
     }
@@ -51,7 +51,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ENTRY_COL_WEIGHT, weight);
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, values);
-        Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " with rowid " + insertedRowid + ".");
+        Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " with rowid " + insertedRowid + '.');
     }
 
     public void putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
@@ -83,7 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public HashMap<String, Integer> getEntries(String categoryName) {
         HashMap<String, Integer> entries = new HashMap<>();
-        String query = "SELECT " + ENTRY_COL_WORD + "," + ENTRY_COL_WEIGHT + " FROM " + TABLE_NAME_CATEGORY;
+        String query = "SELECT " + ENTRY_COL_WORD + ',' + ENTRY_COL_WEIGHT + " FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
 
@@ -100,17 +100,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT  count() FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
-        if (c.moveToFirst()) {
-            return c.getInt(0);
-        } else {
-            return -1;
-        }
+        return c.moveToFirst() ? c.getInt(0) : -1;
+        c.close();
     }
     //Verilen isimdeki kategoriyi siliyor
 
     public void deleteCategory(String categoryName) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + "." + CATEGORY_COL_NAME + " = " + categoryName;
+        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = " + categoryName;
         Cursor c = db.rawQuery(query, null);
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_CATEGORY_ID + "= ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
@@ -121,7 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Kategori içinden bir entry siliyor
     public void deleteEntries(String entry, String categoryName) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + "." + CATEGORY_COL_NAME + " = " + categoryName;
+        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = " + categoryName;
         Cursor c = db.rawQuery(query, null);
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_CATEGORY_ID + " = ? AND " + ENTRY_COL_WORD + " = ?", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entry});

@@ -23,9 +23,9 @@ public class OntologyHandler {
     private static final Integer TRMREF = 7;
     private static final Integer TRMFRQ = 8;
     private static final Integer TRMTRM = 9;
-    LanguageHandler languageHandler;
-    ConnectionHandler connectionHandler;
-    DatabaseHandler databaseHandler;
+    private final LanguageHandler languageHandler;
+    private final ConnectionHandler connectionHandler;
+    private final DatabaseHandler databaseHandler;
 
     Context context;
 
@@ -59,8 +59,6 @@ public class OntologyHandler {
             System.out.println(node + "\n" + "_____" +
                     "_________________________");
         }
-
-
 
         for (Node node : ontology.getNodes()) {
             for (String ref : ontology.getRoot().getReferences()) {

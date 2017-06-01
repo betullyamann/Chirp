@@ -3,10 +3,6 @@ package info.chirpapp.chirp.containers;
 import java.util.Comparator;
 import java.util.Map.Entry;
 
-/**
- * Created by Zephyri on 1.06.2017.
- */
-
 public class EntryComparator implements Comparator<Entry<String, Integer>> {
     @Override
     public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {

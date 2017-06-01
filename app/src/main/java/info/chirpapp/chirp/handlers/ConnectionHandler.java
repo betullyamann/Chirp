@@ -78,13 +78,17 @@ public class ConnectionHandler {
                 System.out.println("NO WIKI ACCESS");
                 // TODO REPLACE WITH IN APP WARNING
             }
-
-            if (obj.has("parse")) {
-                obj = obj.getJSONObject("parse");
-                node.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
-                obj = obj.getJSONObject("wikitext");
-                node.setWikiText(obj.getString("*"));
-                test.setAvailable();
+            try {
+                if (obj.has("parse")) {
+                    obj = obj.getJSONObject("parse");
+                    node.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
+                    obj = obj.getJSONObject("wikitext");
+                    node.setWikiText(obj.getString("*"));
+                    test.setAvailable();
+                }
+            } catch (NullPointerException e) {
+                System.out.println("NO WIKI ACCESS");
+                // TODO REPLACE WITH IN APP WARNING
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
