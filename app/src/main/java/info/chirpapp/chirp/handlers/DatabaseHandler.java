@@ -100,8 +100,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT  count() FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(query, null);
-        return c.moveToFirst() ? c.getInt(0) : -1;
         c.close();
+        return c.moveToFirst() ? c.getInt(0) : -1;
     }
     //Verilen isimdeki kategoriyi siliyor
 
