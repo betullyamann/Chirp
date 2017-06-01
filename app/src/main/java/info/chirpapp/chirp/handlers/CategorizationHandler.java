@@ -3,7 +3,7 @@ package info.chirpapp.chirp.handlers;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Map.Entry;
 
 import info.chirpapp.chirp.containers.Category;
 import info.chirpapp.chirp.containers.SimplifiedTweet;
@@ -37,9 +37,9 @@ public class CategorizationHandler {
 
         for (SimplifiedTweet tweet : tweets) {
             for (Category category : categories) {
-                for (VectorElement entry : category.getWords()) {
-                    if (tweet.containsWord(entry.getWord())) {
-                        category.addPoint(tweet, entry.getFrequency());
+                for (Entry<String, Integer> entry : category.getWords().entrySet()) {
+                    if (tweet.containsWord(entry.getKey())) {
+                        category.addPoint(tweet, entry.getValue());
                     }
                 }
             }
@@ -49,9 +49,9 @@ public class CategorizationHandler {
     // Iterator; eleman silip ilerlerken kullanabileceğimiz tek yöntem
     // Puanları, belirlenen değerin altında kalan tweetler ilgili kategoriden siliniyor.
     public static void removeTweetsBelowThreshold(ArrayList<Category> categories) {
-
+/*
         for (Category category : categories) {
-            Iterator<Integer> iterator = category.getPoints().iterator();
+            Iterator<Integer> iterator = category.getTweets()..iterator();
             Integer i = 0;
             while (iterator.hasNext()) {
                 if (iterator.next() < THRESHOLD) {
@@ -61,7 +61,7 @@ public class CategorizationHandler {
                     i++;
                 }
             }
-        }
+        }*/
     }
 
 }

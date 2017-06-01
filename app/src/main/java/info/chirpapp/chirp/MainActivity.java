@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(getApplicationContext(), new Twitter(authConfig));
+        Stetho.initializeWithDefaults(this);
 /*
 
         Thread initializationThread = new Thread() {
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_main);
 
-        new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Sanat")).start();
+        new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Teknoloji")).start();
+        //new Thread(() -> new OntologyHandler(getApplicationContext()).prepareNode(new Node("doğal"))).start();
 
 /*
         drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);

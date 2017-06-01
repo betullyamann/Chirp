@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import info.chirpapp.chirp.containers.Node;
@@ -23,7 +24,7 @@ import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 public class LanguageHandler {
 
-    private static final Integer FREQUENCY_THRESHOLD = 2;
+    private static final Integer FREQUENCY_THRESHOLD = 5;
     private static final ArrayList<String> STOP_WORDS = new ArrayList<>(Arrays.asList("a", "acaba", "altı", "altmış", "ama", "ancak",
             "arada", "artık", "asla", "aslında", "aslında", "ayrıca", "az", "bana", "bazen", "bazı", "bazıları", "belki", "ben",
             "benden", "beni", "benim", "beri", "beş", "bile", "bilhassa", "bin", "bir", "biraz", "birçoğu", "birçok", "biri", "birisi",
@@ -140,11 +141,11 @@ public class LanguageHandler {
             }
         }
 
-        Iterator<Integer> iterator = node.getFrequencies().values().iterator();
+        Iterator<Entry<String, Integer>> iterator = node.getFrequencies().entrySet().iterator();
 
         while (iterator.hasNext()) {
-            Integer temp = iterator.next();
-            if (temp < FREQUENCY_THRESHOLD) {
+            Entry<String, Integer> entry = iterator.next();
+            if (entry.getValue() < FREQUENCY_THRESHOLD || STOP_WORDS.contains(entry.getKey())) {
                 iterator.remove();
             }
         }

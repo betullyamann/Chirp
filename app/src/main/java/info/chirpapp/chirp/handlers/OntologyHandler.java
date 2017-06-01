@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import info.chirpapp.chirp.containers.Node;
 import info.chirpapp.chirp.containers.Ontology;
@@ -21,14 +22,18 @@ public class OntologyHandler {
     private static final Integer FRQTRM = 6;
     private static final Integer TRMREF = 7;
     private static final Integer TRMFRQ = 8;
-    private static final Integer TRMREM = 9;
+    private static final Integer TRMTRM = 9;
     LanguageHandler languageHandler;
     ConnectionHandler connectionHandler;
     DatabaseHandler databaseHandler;
+
+    Context context;
+
     public OntologyHandler(Context context) {
         connectionHandler = new ConnectionHandler();
         languageHandler = new LanguageHandler();
         databaseHandler = new DatabaseHandler(context);
+        this.context = context;
     }
 
     // Tag'e iliskin ontoloji olusturuluyor
@@ -49,6 +54,13 @@ public class OntologyHandler {
             }
         }
 
+        System.out.println(ontology.getRoot() + "\n" + "______________________________");
+        for (Node node : ontology.getNodes()) {
+            System.out.println(node + "\n" + "_____" +
+                    "_________________________");
+        }
+
+
 
         for (Node node : ontology.getNodes()) {
             for (String ref : ontology.getRoot().getReferences()) {
@@ -58,10 +70,39 @@ public class OntologyHandler {
                 if (node.getFrequencies().containsKey(ref)) {
                     ontology.getWords().put(ref, REFFRQ);
                 }
+                if (node.getTerms().contains(ref)) {
+                    ontology.getWords().put(ref, REFTRM);
+                }
+            }
+            for (String frq : ontology.getRoot().getFrequencies().keySet()) {
+                if (node.getReferences().contains(frq)) {
+                    ontology.getWords().put(frq, FRQREF);
+                }
+                if (node.getFrequencies().containsKey(frq)) {
+                    ontology.getWords().put(frq, FRQFRQ);
+                }
+                if (node.getTerms().contains(frq)) {
+                    ontology.getWords().put(frq, FRQTRM);
+                }
+            }
+            for (String trm : ontology.getRoot().getTerms()) {
+                if (node.getReferences().contains(trm)) {
+                    ontology.getWords().put(trm, TRMREF);
+                }
+                if (node.getFrequencies().containsKey(trm)) {
+                    ontology.getWords().put(trm, TRMFRQ);
+                }
+                if (node.getTerms().contains(trm)) {
+                    ontology.getWords().put(trm, TRMTRM);
+                }
             }
         }
 
-        databaseHandler.putWholeCategory(ontology.getRoot().getName(), vectorize(ontology));
+        HashMap<String, Integer> vector = vectorize(ontology);
+        for (Entry<String, Integer> entry : vector.entrySet()) {
+            System.out.println("key " + entry.getKey() + " value " + entry.getValue());
+        }
+        databaseHandler.putWholeCategory(ontology.getRoot().getName(), vector);
         Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
     }
 
@@ -70,9 +111,8 @@ public class OntologyHandler {
     public HashMap<String, Integer> vectorize(Ontology ontology) {
         HashMap<String, Integer> vector = new HashMap<>();
 
-        vector.put(ontology.getRoot().getName(), 40);
-        //TODO REWRITE VECTORIZE
-
+        vector.put(ontology.getRoot().getName(), 10);
+        vector.putAll(ontology.getWords());
 
         return vector;
     }
@@ -114,6 +154,7 @@ public class OntologyHandler {
             Log.i("TERMS", "DONE IN " + (float) ((System.nanoTime() - time) / 1000000L));
         }
 
+        System.out.println(node);
         return test.isAvailable();
     }
 }

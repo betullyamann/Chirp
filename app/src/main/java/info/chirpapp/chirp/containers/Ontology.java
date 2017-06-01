@@ -30,4 +30,5 @@ public class Ontology {
     public HashMap<String, Integer> getWords() {
         return words;
     }
+
 }

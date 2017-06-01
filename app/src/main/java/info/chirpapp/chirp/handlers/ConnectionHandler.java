@@ -29,7 +29,7 @@ import retrofit2.http.Query;
 public class ConnectionHandler {
 
     private static final Integer MAX_TWEET_COUNT = 200;
-    private static final String TDK_TERM_PATTERN = "[1-9]\\..*<br>";
+    private static final String TDK_TERM_PATTERN = "[1-9]\\. <i>.*<br>";
 
     private final ConnectionService wikiService;
     private final ConnectionService TDKService;
@@ -68,10 +68,17 @@ public class ConnectionHandler {
 
     protected void getWikiPage(Node node, WikiAvailability test) {
         String query = node.getName();
-        Call<String> request = wikiService.getFromWiki("parse", "json", "wikitext|links", "1", query);
+        Call<String> request = wikiService.getFromWiki("parse", "json", "wikitext|links", "1", "1", query);
 
         try {
-            JSONObject obj = new JSONObject(request.execute().body());
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(request.execute().body());
+            } catch (NullPointerException e) {
+                System.out.println("NO WIKI ACCESS");
+                // TODO REPLACE WITH IN APP WARNING
+            }
+
             if (obj.has("parse")) {
                 obj = obj.getJSONObject("parse");
                 node.setLinks(obj.getJSONArray("links")); // json dosyasında links diye bi array tanımlanmış ondan bi dizi üretiyorum
@@ -104,7 +111,7 @@ public class ConnectionHandler {
         Call<String> getFromTDK(@Query("option") String option, @Query("arama") String arama, @Query("kelime") String kelime);
 
         @GET("/w/api.php")
-        Call<String> getFromWiki(@Query("action") String action, @Query("format") String format, @Query("prop") String prop, @Query("utf8") String utf8, @Query("page") String page);
+        Call<String> getFromWiki(@Query("action") String action, @Query("format") String format, @Query("prop") String prop, @Query("utf8") String utf8, @Query("redirects") String redirects, @Query("page") String page);
     }
 }
 

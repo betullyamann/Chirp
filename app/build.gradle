@@ -58,5 +58,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.5.0'
     testCompile 'junit:junit:4.12'
 }
