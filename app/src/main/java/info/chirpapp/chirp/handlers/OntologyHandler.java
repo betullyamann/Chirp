@@ -162,8 +162,8 @@ public class OntologyHandler {
         HashMap<String, Integer> vector = vectorize(ontology);
         for (Entry<String, Integer> entry : vector.entrySet()) {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
-        }
-        databaseHandler.putWholeCategory(ontology.getRoot().getName(), vector);*/
+        }*/
+        databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
         Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
     }
 

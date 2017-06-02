@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "CATEGORIES";
+    private static final String DATABASE_NAME = "CATEGORIES.db";
     private static final Integer DATABASE_VERSION = 1;
     private static final String LOG_TAG = "Database Handler";
 
@@ -26,39 +26,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ENTRY_COL_WORD = "WORD";
     private static final String ENTRY_COL_WEIGHT = "WEIGHT";
 
+    private final Object mutex;
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mutex = new Object();
     }
 
     public Long putCategory(String name) {
+        Long insertedRowid;
         SQLiteDatabase database = getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(CATEGORY_COL_NAME, name);
+        synchronized (mutex) {
+            ContentValues values = new ContentValues();
+            values.put(CATEGORY_COL_NAME, name);
 
-        Long insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
-        Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
+            insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
+            Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
+        }
 
         return insertedRowid;
     }
 
-    public void putEntry(Long categoryID, String word, Integer weight) {
+    public void putEntry(Long categoryID, String word, Double weight) {
         SQLiteDatabase database = getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        values.put(ENTRY_COL_WORD, word);
-        values.put(ENTRY_COL_WEIGHT, weight);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
+        contentValues.put(ENTRY_COL_WORD, word);
+        contentValues.put(ENTRY_COL_WEIGHT, weight);
 
-        Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, values);
-        Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " with rowid " + insertedRowid + '.');
+        Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
+        Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " to row " + insertedRowid);
     }
 
-    public void putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
-        deleteCategory(categoryName);
+    public void putWholeCategory(String categoryName, HashMap<String, Double> elements) {
         Long categoryID = putCategory(categoryName);
 
-        for (Entry<String, Integer> element : elements.entrySet()) {
+        for (Entry<String, Double> element : elements.entrySet()) {
             putEntry(categoryID, element.getKey(), element.getValue());
         }
     }
@@ -77,7 +82,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
 
-        c.close();
         return categories;
     }
 
@@ -156,9 +160,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_NAME_CATEGORY + " (" + CATEGORY_COL_NAME + " TEXT UNIQUE NOT NULL);");
-        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER, "
-                + ENTRY_COL_WORD + " TEXT, " + ENTRY_COL_WEIGHT + " INTEGER NOT NULL);");
+        db.execSQL("CREATE TABLE " + TABLE_NAME_CATEGORY + " (" + CATEGORY_COL_NAME + " TEXT NOT NULL);");
+        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER, " + ENTRY_COL_WORD + " TEXT, " + ENTRY_COL_WEIGHT + " REAL NOT NULL);");
     }
 
     @Override

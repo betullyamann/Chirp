@@ -11,25 +11,10 @@ import info.chirpapp.chirp.containers.SimplifiedTweet;
 public class CategorizationHandler {
 
     private static final Integer THRESHOLD = 50;
+    private final DatabaseHandler databaseHandler;
 
-    public static ArrayList<Category> start(Context context) {
-        //ArrayList<SimplifiedTweet> tweets = ConnectionHandler.getTweets();
-        //LanguageHandler.prepareTweet(tweets);
-        DatabaseHandler databaseHandler = new DatabaseHandler(context);
-        ArrayList<Category> categories = new ArrayList<>();
-
-        // Ontolojiler uygun categorilere ekleniyor ve ontolojiye ait kelimeler de kategorinin kelimelerine ekleniyor.
-        int i=0;
-        for (String categoryName : databaseHandler.getCategoryNames()) {
-            categories.add(new Category(categoryName));
-            categories.get(i).setWords(databaseHandler.getEntries(categoryName));
-            i++;
-        }
-
-        //distance(tweets, categories);
-        //tweets = null; //Ram tasarrufu
-
-        return categories;
+    public CategorizationHandler(Context context) {
+        databaseHandler = new DatabaseHandler(context);
     }
 
     //tweetlerin ontolojilerle olan ilgisi(uzaklığı) hesaplanıyor
@@ -62,6 +47,25 @@ public class CategorizationHandler {
                 }
             }
         }*/
+    }
+
+    public ArrayList<Category> start(Context context) {
+        //ArrayList<SimplifiedTweet> tweets = ConnectionHandler.getTweets();
+        //LanguageHandler.prepareTweet(tweets);
+        ArrayList<Category> categories = new ArrayList<>();
+
+        // Ontolojiler uygun categorilere ekleniyor ve ontolojiye ait kelimeler de kategorinin kelimelerine ekleniyor.
+        int i = 0;
+        for (String categoryName : databaseHandler.getCategoryNames()) {
+            categories.add(new Category(categoryName));
+            categories.get(i).setWords(databaseHandler.getEntries(categoryName));
+            i++;
+        }
+
+        //distance(tweets, categories);
+        //tweets = null; //Ram tasarrufu
+
+        return categories;
     }
 
 }
