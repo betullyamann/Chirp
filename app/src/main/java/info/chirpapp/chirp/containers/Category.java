@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 public class Category {
     private String name;
-    private HashMap<String, Integer> words;
-    private HashMap<SimplifiedTweet, Integer> tweets;
+    private HashMap<String, Double> words;
+    private HashMap<SimplifiedTweet, Double> tweets;
 
     public Category(String name) {
         this.name = name;
@@ -19,23 +19,23 @@ public class Category {
         this.name = name;
     }
 
-    public HashMap<String, Integer> getWords() {
+    public HashMap<String, Double> getWords() {
         return words;
     }
 
-    public void setWords(HashMap<String, Integer> words) {
+    public void setWords(HashMap<String, Double> words) {
         this.words = words;
     }
 
-    public HashMap<SimplifiedTweet, Integer> getTweets() {
+    public HashMap<SimplifiedTweet, Double> getTweets() {
         return tweets;
     }
 
-    public void setTweets(HashMap<SimplifiedTweet, Integer> tweets) {
+    public void setTweets(HashMap<SimplifiedTweet, Double> tweets) {
         this.tweets = tweets;
     }
 
-    public void addPoint(SimplifiedTweet tweet, Integer frequency) {
+    public void addPoint(SimplifiedTweet tweet, Double frequency) {
         if (tweets.containsKey(tweet)) {
             tweets.put(tweet, tweets.get(tweet) + frequency);
         } else {

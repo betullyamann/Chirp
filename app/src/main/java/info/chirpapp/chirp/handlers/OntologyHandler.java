@@ -32,7 +32,7 @@ public class OntologyHandler {
     }
 
     // Tag'e iliskin ontoloji olusturuluyor
-    public void createOnthology(String tag) {
+    public HashMap<String, Double> createOnthology(String tag) {
         Ontology ontology = new Ontology(tag);
         // Verilen tag'in primitive'i olusturuldu.
         prepareNode(ontology.getRoot());
@@ -89,16 +89,16 @@ public class OntologyHandler {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
                     wordPoints.put(str, wordPoints.get(str) + REF_PTS);
                 }
-                if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
-                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
-                }
-                if (ontology.getRoot().getTerms().contains(str)) {
-                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
-                }
+//                if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
+//                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
+//                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
+//                }
+//                if (ontology.getRoot().getTerms().contains(str)) {
+//                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
+//                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
+//                }
             }
-            for (String str : node.getFrequencies().keySet()) {
+            /*for (String str : node.getFrequencies().keySet()) {
                 if (ontology.getRoot().getReferences().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
                     wordPoints.put(str, wordPoints.get(str) + REF_PTS);
@@ -125,7 +125,7 @@ public class OntologyHandler {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
                     wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
                 }
-            }
+            }*/
         }
 
         Iterator<Entry<String, Double>> entryIterator = wordPoints.entrySet().iterator();
@@ -145,14 +145,22 @@ public class OntologyHandler {
             System.out.println(entry.getKey() + ' ' + (entry.getValue()/(double) pagePoints.size()));
         }*/
 
+        for (Entry<String, Double> entry : pagePoints.entrySet()) {
+            entry.setValue(entry.getValue() / (double) wordPoints.size());
+        }
+
+        for (Entry<String, Double> entry : wordPoints.entrySet()) {
+            entry.setValue(entry.getValue() / (double) wordPoints.size());
+        }
+
         System.out.println("PAGE POINTS " + pagePoints.size());
         for (Entry<String, Double> entry : pagePoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + entry.getValue() / (double) wordPoints.size());
+            System.out.println(entry.getKey() + ' ' + entry.getValue());
         }
 
         System.out.println("WORD POINTS " + wordPoints.size());
         for (Entry<String, Double> entry : wordPoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + entry.getValue() / (double) wordPoints.size());
+            System.out.println(entry.getKey() + ' ' + entry.getValue());
         }
 
 
@@ -163,8 +171,9 @@ public class OntologyHandler {
         for (Entry<String, Integer> entry : vector.entrySet()) {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
         }*/
-        databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
+        //databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
         Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
+        return pagePoints;
     }
 
     // Ontolojinin kelime vektörü çıkartılıyor.

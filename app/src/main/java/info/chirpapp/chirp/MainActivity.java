@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> new OntologyHandler(getApplicationContext()).createOnthology("Teknoloji")).start();
         //new Thread(() -> new OntologyHandler(getApplicationContext()).prepareNode(new Node("doğal"))).start();
 
+
+
 /*
         drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);
         navigationView = (NavigationView) findViewById(id.view_navigation);
