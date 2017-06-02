@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-
+        getApplicationContext().deleteDatabase("CATEGORIES.db");
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(getApplicationContext(), new Twitter(authConfig));
         Stetho.initializeWithDefaults(this);
