@@ -9,12 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import info.chirpapp.chirp.R.id;
 import info.chirpapp.chirp.R.layout;
-import info.chirpapp.chirp.containers.Category;
-import info.chirpapp.chirp.handlers.CategorizationHandler;
 
 public class TabFragment extends Fragment {
 
@@ -42,16 +38,16 @@ public class TabFragment extends Fragment {
         // Now, this is a workaround. The setupWithViewPager doesn't works without the runnable. Maybe a Support Library Bug.
         tabLayout.post(() -> tabLayout.setupWithViewPager(viewPager));
 
-        populateFragments();
+        // populateFragments();
 
         return view;
     }
 
-    public void populateFragments() {
+    /*public void populateFragments() {
         ArrayList<Category> categories = CategorizationHandler.start(getActivity().getApplicationContext());
 
         for (Category category : categories) {
             viewPagerAdapter.getTitleFragment(category.getName()).setListToView(new ArrayList<>(category.getTweets().keySet()));
         }
-    }
+    }*/
 }

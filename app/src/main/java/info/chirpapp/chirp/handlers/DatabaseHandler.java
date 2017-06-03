@@ -39,7 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         synchronized (mutex) {
             ContentValues values = new ContentValues();
-            values.put(CATEGORY_COL_NAME, name);
+            values.put(CATEGORY_COL_NAME, '\'' + name + '\'');
 
             insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
             Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
@@ -53,7 +53,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        contentValues.put(ENTRY_COL_WORD, word);
+        contentValues.put(ENTRY_COL_WORD, '\'' + word + '\'');
         contentValues.put(ENTRY_COL_WEIGHT, weight);
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
@@ -161,7 +161,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_NAME_CATEGORY + " (" + CATEGORY_COL_NAME + " TEXT NOT NULL);");
-        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER, " + ENTRY_COL_WORD + " TEXT, " + ENTRY_COL_WEIGHT + " REAL NOT NULL);");
+        db.execSQL("CREATE TABLE " + TABLE_NAME_ENTRY + " (" + ENTRY_COL_CATEGORY_ID + " INTEGER, " + ENTRY_COL_WORD + " TEXT, " + ENTRY_COL_WEIGHT + " INTEGER NOT NULL);");
     }
 
     @Override

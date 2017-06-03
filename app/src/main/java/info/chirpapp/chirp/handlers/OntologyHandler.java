@@ -172,8 +172,12 @@ public class OntologyHandler {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
         }*/
         //databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
-        Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
-        return pagePoints;
+        if (!ontology.getNodes().isEmpty()) {
+            databaseHandler.deleteCategory(ontology.getRoot().getName());
+            Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
+        } else {
+            return null;
+        }
     }
 
     // Ontolojinin kelime vektörü çıkartılıyor.

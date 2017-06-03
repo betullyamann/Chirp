@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -77,6 +78,8 @@ public class ConnectionHandler {
             } catch (NullPointerException e) {
                 System.out.println("NO WIKI ACCESS");
                 // TODO REPLACE WITH IN APP WARNING
+            } catch (SocketTimeoutException e) {
+                Log.e("CON", "CANNOT CONNECT TO WIKI, PERHAPS IT'S BANNED AGAIN? TURN ON THE VPN");
             }
             try {
                 if (obj.has("parse")) {
