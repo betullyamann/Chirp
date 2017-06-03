@@ -32,7 +32,7 @@ public class OntologyHandler {
     }
 
     // Tag'e iliskin ontoloji olusturuluyor
-    public HashMap<String, Double> createOnthology(String tag) {
+    public void createOnthology(String tag) {
         Ontology ontology = new Ontology(tag);
         // Verilen tag'in primitive'i olusturuldu.
         prepareNode(ontology.getRoot());
@@ -63,22 +63,22 @@ public class OntologyHandler {
             System.out.println(node + "\n" + "______________________________");
         }*/
 
-        HashMap<String, Double> pagePoints = new HashMap<>();
+        HashMap<String, Integer> pagePoints = new HashMap<>();
         for (Node node : ontology.getNodes()) {
-            pagePoints.put(node.getName(), 0.0);
+            pagePoints.put(node.getName(), 0);
         }
 
-        HashMap<String, Double> wordPoints = new HashMap<>();
+        HashMap<String, Integer> wordPoints = new HashMap<>();
         for (Node node : ontology.getNodes()) {
             for (String str : node.getReferences()) {
-                wordPoints.put(str, 0.0);
+                wordPoints.put(str, 0);
             }
             for (String str : node.getFrequencies().keySet()) {
-                wordPoints.put(str, 0.0);
+                wordPoints.put(str, 0);
 
             }
             for (String str : node.getTerms()) {
-                wordPoints.put(str, 0.0);
+                wordPoints.put(str, 0);
             }
         }
 
@@ -89,16 +89,16 @@ public class OntologyHandler {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
                     wordPoints.put(str, wordPoints.get(str) + REF_PTS);
                 }
-//                if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
-//                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
-//                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
-//                }
-//                if (ontology.getRoot().getTerms().contains(str)) {
-//                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
-//                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
-//                }
+                if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
+                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
+                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
+                }
+                if (ontology.getRoot().getTerms().contains(str)) {
+                    pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
+                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
+                }
             }
-            /*for (String str : node.getFrequencies().keySet()) {
+            for (String str : node.getFrequencies().keySet()) {
                 if (ontology.getRoot().getReferences().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
                     wordPoints.put(str, wordPoints.get(str) + REF_PTS);
@@ -125,41 +125,41 @@ public class OntologyHandler {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
                     wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
                 }
-            }*/
+            }
         }
 
-        Iterator<Entry<String, Double>> entryIterator = wordPoints.entrySet().iterator();
+        Iterator<Entry<String, Integer>> entryIterator = wordPoints.entrySet().iterator();
         while (entryIterator.hasNext()) {
-            if (entryIterator.next().getValue() == 0.0) {
+            if (entryIterator.next().getValue() == 0) {
                 entryIterator.remove();
             }
         }
 
-        /*System.out.println("PAGE POINTS " + pagePoints.size());
-        for (Entry<String, Double> entry : pagePoints.entrySet()) {
+        System.out.println("PAGE POINTS " + pagePoints.size());
+        for (Entry<String, Integer> entry : pagePoints.entrySet()) {
             System.out.println(entry.getKey() + ' ' + (entry.getValue()/(double) pagePoints.size()));
         }
 
         System.out.println("WORD POINTS " + wordPoints.size());
-        for (Entry<String, Double> entry : wordPoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + (entry.getValue()/(double) pagePoints.size()));
-        }*/
-
-        for (Entry<String, Double> entry : pagePoints.entrySet()) {
-            entry.setValue(entry.getValue() / (double) wordPoints.size());
+        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
+            System.out.println(entry.getKey() + ' ' + entry.getValue()*1000 / pagePoints.size());
         }
 
-        for (Entry<String, Double> entry : wordPoints.entrySet()) {
-            entry.setValue(entry.getValue() / (double) wordPoints.size());
+        for (Entry<String, Integer> entry : pagePoints.entrySet()) {
+            entry.setValue((entry.getValue() * 1000) / wordPoints.size());
+        }
+
+        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
+            entry.setValue((entry.getValue() * 1000) / wordPoints.size());
         }
 
         System.out.println("PAGE POINTS " + pagePoints.size());
-        for (Entry<String, Double> entry : pagePoints.entrySet()) {
+        for (Entry<String, Integer> entry : pagePoints.entrySet()) {
             System.out.println(entry.getKey() + ' ' + entry.getValue());
         }
 
         System.out.println("WORD POINTS " + wordPoints.size());
-        for (Entry<String, Double> entry : wordPoints.entrySet()) {
+        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
             System.out.println(entry.getKey() + ' ' + entry.getValue());
         }
 
@@ -175,8 +175,8 @@ public class OntologyHandler {
         if (!ontology.getNodes().isEmpty()) {
             databaseHandler.deleteCategory(ontology.getRoot().getName());
             Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
-        } else {
-            return null;
+        } else{
+
         }
     }
 

@@ -44,11 +44,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
             Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
         }
-
         return insertedRowid;
     }
 
-    public void putEntry(Long categoryID, String word, Double weight) {
+    public void putEntry(Long categoryID, String word, Integer weight) {
         SQLiteDatabase database = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -60,10 +59,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " to row " + insertedRowid);
     }
 
-    public void putWholeCategory(String categoryName, HashMap<String, Double> elements) {
+    public Integer getMaxWeight(){
+        Integer maxWeight;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"MAX("+ENTRY_COL_WEIGHT+')'}, null, null, null, null, null);
+
+        if(c.moveToFirst()){
+            return c.getInt(0);
+        }else{
+            return -1;
+        }
+    }
+
+    public void addEntry(Long categoryID, String word){
+        SQLiteDatabase database = getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
+        contentValues.put(ENTRY_COL_WORD, '\'' + word + '\'');
+        contentValues.put(ENTRY_COL_WEIGHT, getMaxWeight());
+
+        Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
+        Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + getMaxWeight() + " to category with ID " + categoryID + " to row " + insertedRowid);
+
+    }
+
+    public void putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
         Long categoryID = putCategory(categoryName);
 
-        for (Entry<String, Double> element : elements.entrySet()) {
+        for (Entry<String, Integer> element : elements.entrySet()) {
             putEntry(categoryID, element.getKey(), element.getValue());
         }
     }
@@ -72,9 +96,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Kategori isimleri bir arraylist olarak döndürülüyor.
     public ArrayList<String> getCategoryNames() {
         ArrayList<String> categories = new ArrayList<>();
-        String query = "SELECT " + CATEGORY_COL_NAME + " FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery(query, null);
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{CATEGORY_COL_NAME}, null, null, null, null, null);
 
         if (c.moveToFirst()) {
             do {
@@ -87,9 +110,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public HashMap<String, Integer> getEntries(String categoryName) {
         HashMap<String, Integer> entries = new HashMap<>();
-        String query = "SELECT " + ENTRY_COL_WORD + ',' + ENTRY_COL_WEIGHT + " FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery(query, null);
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{ENTRY_COL_WORD, ENTRY_COL_WEIGHT}, null, null, null, null, null);
 
         if (c.moveToFirst()) {
             do {
@@ -101,18 +123,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Integer getCategoryCount() {
-        String query = "SELECT  count() FROM " + TABLE_NAME_CATEGORY;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery(query, null);
-        c.close();
-        return c.moveToFirst() ? c.getInt(0) : -1;
+        Cursor c = db.query(TABLE_NAME_CATEGORY, null, null, null, null, null, null);
+        return c.getColumnCount();
     }
-    //Verilen isimdeki kategoriyi siliyor
 
+    //Verilen isimdeki kategoriyi siliyor
     public void deleteCategory(String categoryName) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = " + categoryName;
-        Cursor c = db.rawQuery(query, null);
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"rowid"}, TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = ?", new String[]{categoryName}, null, null, null);
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_CATEGORY_ID + "= ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
         db.delete(TABLE_NAME_CATEGORY, "rowid = ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex("rowid")))});
@@ -122,39 +141,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Kategori içinden bir entry siliyor
     public void deleteEntries(String entry, String categoryName) {
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = " + categoryName;
-        Cursor c = db.rawQuery(query, null);
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"rowid"}, TABLE_NAME_CATEGORY + '.' + CATEGORY_COL_NAME + " = ?", new String[]{categoryName}, null, null, null);
 
         db.delete(TABLE_NAME_ENTRY, ENTRY_COL_CATEGORY_ID + " = ? AND " + ENTRY_COL_WORD + " = ?", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entry});
         c.close();
-    }
-
-    public void editEntryName(String categoryName, String entryName, String newName) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues newValues = new ContentValues();
-        newValues.put(ENTRY_COL_WORD, newName);
-
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + CATEGORY_COL_NAME + " = " + categoryName;
-        Cursor c = db.rawQuery(query, null);
-
-        db.update(TABLE_NAME_ENTRY, newValues, ENTRY_COL_CATEGORY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
-        c.close();
-    }
-
-    public void editEntryWeight(String categoryName, String entryName, String newWeight) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(ENTRY_COL_WEIGHT, newWeight);
-
-        String query = "SELECT rowid FROM " + TABLE_NAME_CATEGORY + " WHERE " + CATEGORY_COL_NAME + " = " + categoryName;
-        Cursor c = db.rawQuery(query, null);
-
-        db.update(TABLE_NAME_ENTRY, values, ENTRY_COL_CATEGORY_ID + " = ? ," + ENTRY_COL_WORD + " = ? ", new String[]{String.valueOf(c.getString(c.getColumnIndex("rowid"))), entryName});
-        c.close();
-    }
-
-    public void dropEntry(String categoryName, String entry) {
-
     }
 
 

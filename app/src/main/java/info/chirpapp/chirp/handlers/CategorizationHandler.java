@@ -28,7 +28,7 @@ public class CategorizationHandler {
 
         for (SimplifiedTweet tweet : tweets) {
             for (Category category : categories) {
-                for (Entry<String, Double> entry : category.getWords().entrySet()) {
+                for (Entry<String, Integer> entry : category.getWords().entrySet()) {
                     if (tweet.containsWord(entry.getKey())) {
                         category.addPoint(tweet, entry.getValue());
                     }
@@ -42,7 +42,7 @@ public class CategorizationHandler {
     public static void removeTweetsBelowThreshold(ArrayList<Category> categories) {
 
         for (Category category : categories) {
-            Iterator<Double> iterator = category.getTweets().values().iterator();
+            Iterator<Integer> iterator = category.getTweets().values().iterator();
             Integer i = 0;
             while (iterator.hasNext()) {
                 if (iterator.next() < THRESHOLD) {
@@ -55,7 +55,7 @@ public class CategorizationHandler {
         }
     }
 
-    public ArrayList<Category> start(String name, HashMap<String, Double> map) {
+    public ArrayList<Category> start(String name, HashMap<String, Integer> map) {
         ArrayList<SimplifiedTweet> tweets = connectionHandler.getTweets();
         languageHandler.parseTweets(tweets);
         ArrayList<Category> categories = new ArrayList<>();
