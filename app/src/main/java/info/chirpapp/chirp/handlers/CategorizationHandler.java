@@ -25,7 +25,7 @@ public class CategorizationHandler {
 
     //tweetlerin ontolojilerle olan ilgisi(uzaklığı) hesaplanıyor
     public static void distance(ArrayList<SimplifiedTweet> tweets, ArrayList<Category> categories) {
-
+        int point = 0;
         for (SimplifiedTweet tweet : tweets) {
             for (Category category : categories) {
                 for (Entry<String, Integer> entry : category.getWords().entrySet()) {
@@ -33,42 +33,36 @@ public class CategorizationHandler {
                         category.addPoint(tweet, entry.getValue());
                     }
                 }
+                point += category.getPoint(tweet);
             }
-        }
-    }
 
-    // Iterator; eleman silip ilerlerken kullanabileceğimiz tek yöntem
-    // Puanları, belirlenen değerin altında kalan tweetler ilgili kategoriden siliniyor.
-    public static void removeTweetsBelowThreshold(ArrayList<Category> categories) {
-
-        for (Category category : categories) {
-            Iterator<Integer> iterator = category.getTweets().values().iterator();
-            Integer i = 0;
-            while (iterator.hasNext()) {
-                if (iterator.next() < THRESHOLD) {
-                    iterator.remove();
-                    category.getTweets().remove(category.getTweets().get(i));
-                } else {
-                    i++;
+            point /= categories.size();
+            for(Category category : categories){
+                if(category.getPoint(tweet) < point ) {
+                    category.getTweets().remove(tweet);
                 }
             }
+
+            for(Category category : categories){
+                System.out.println("CATEGORY : " + category + '\n' + "TWEET: " + category.getTweets());
+            }
+
+            point = 0;
         }
     }
 
-    public ArrayList<Category> start(String name, HashMap<String, Integer> map) {
+    public ArrayList<Category> start() {
         ArrayList<SimplifiedTweet> tweets = connectionHandler.getTweets();
         languageHandler.parseTweets(tweets);
-        ArrayList<Category> categories = new ArrayList<>();
+        ArrayList<Category> categories =  new ArrayList<>();
 
+        ArrayList<String> categoryNames = databaseHandler.getCategoryNames();
+        for(String categoryName : categoryNames){
+            categories.add(new Category(categoryName, databaseHandler.getEntries(categoryName)));
+        }
 
-        Category category = new Category(name);
-        category.setWords(map);
-
-        categories.add(category);
         distance(tweets, categories);
         tweets = null; //Ram tasarrufu
-
-        System.out.println(category.getTweets());
 
         return categories;
     }

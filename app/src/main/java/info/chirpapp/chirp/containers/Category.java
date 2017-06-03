@@ -7,8 +7,9 @@ public class Category {
     private HashMap<String, Integer> words;
     private HashMap<SimplifiedTweet, Integer> tweets;
 
-    public Category(String name) {
+    public Category(String name, HashMap<String, Integer> words) {
         this.name = name;
+        this.words = words;
     }
 
     public String getName() {
@@ -42,6 +43,9 @@ public class Category {
             tweets.put(tweet, frequency);
             tweet.setBelongingTrue();
         }
+    }
 
+    public Integer getPoint(SimplifiedTweet tweet){
+        return tweets.get(tweet);
     }
 }
