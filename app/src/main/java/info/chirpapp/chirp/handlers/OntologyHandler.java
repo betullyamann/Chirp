@@ -13,7 +13,7 @@ import info.chirpapp.chirp.containers.Ontology;
 import info.chirpapp.chirp.containers.WikiAvailability;
 
 public class OntologyHandler {
-    // TODO Node sayısı incelenip gerekiyorsa ekstra nodelar oluşması için işlemler eklenecek
+
     private static final Integer TRM_PTS = 1;
     private static final Integer FRQ_PTS = 2;
     private static final Integer REF_PTS = 3;
@@ -137,7 +137,7 @@ public class OntologyHandler {
 
         System.out.println("PAGE POINTS " + pagePoints.size());
         for (Entry<String, Integer> entry : pagePoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + (entry.getValue()/(double) pagePoints.size()));
+            System.out.println(entry.getKey() + ' ' + (entry.getValue()*1000 / pagePoints.size()));
         }
 
         System.out.println("WORD POINTS " + wordPoints.size());
