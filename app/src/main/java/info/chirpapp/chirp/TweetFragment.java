@@ -1,6 +1,7 @@
 package info.chirpapp.chirp;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,8 +38,22 @@ public class TweetFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
     public void setListToView(ArrayList<SimplifiedTweet> tweets) {
-        listView.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
+        while(getActivity() == null) {
+
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listView.setAdapter(new ArrayAdapter<>(getActivity().getApplicationContext(), layout.layout_tweet, tweets));
+            }
+        });
     }
 
 }

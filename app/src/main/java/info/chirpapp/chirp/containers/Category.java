@@ -10,6 +10,7 @@ public class Category {
     public Category(String name, HashMap<String, Integer> words) {
         this.name = name;
         this.words = words;
+        tweets = new HashMap<>();
     }
 
     public String getName() {
@@ -47,5 +48,9 @@ public class Category {
 
     public Integer getPoint(SimplifiedTweet tweet){
         return tweets.get(tweet);
+    }
+
+    public String toString(){
+        return name;
     }
 }

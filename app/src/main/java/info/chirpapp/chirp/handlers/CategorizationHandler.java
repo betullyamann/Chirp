@@ -2,6 +2,7 @@ package info.chirpapp.chirp.handlers;
 
 import android.content.Context;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,7 +13,7 @@ import info.chirpapp.chirp.containers.SimplifiedTweet;
 
 public class CategorizationHandler {
 
-    private static final Integer THRESHOLD = 50;
+
     private final DatabaseHandler databaseHandler;
     private final ConnectionHandler connectionHandler;
     private final LanguageHandler languageHandler;
@@ -28,18 +29,26 @@ public class CategorizationHandler {
         int point = 0;
         for (SimplifiedTweet tweet : tweets) {
             for (Category category : categories) {
+                System.out.println("CATEGORY " + category );
                 for (Entry<String, Integer> entry : category.getWords().entrySet()) {
                     if (tweet.containsWord(entry.getKey())) {
                         category.addPoint(tweet, entry.getValue());
                     }
                 }
-                point += category.getPoint(tweet);
+
+                if(category.getTweets().containsKey(tweet)) {
+                    point += category.getPoint(tweet);
+                }
+
+                System.out.println("TWEET: " + category.getTweets());
             }
 
             point /= categories.size();
             for(Category category : categories){
-                if(category.getPoint(tweet) < point ) {
-                    category.getTweets().remove(tweet);
+                if(category.getTweets().containsKey(tweet)) {
+                    if (category.getPoint(tweet) < point) {
+                        category.getTweets().remove(tweet);
+                    }
                 }
             }
 
@@ -57,12 +66,13 @@ public class CategorizationHandler {
         ArrayList<Category> categories =  new ArrayList<>();
 
         ArrayList<String> categoryNames = databaseHandler.getCategoryNames();
+        System.out.println("categoryNames: " + categoryNames);
+
         for(String categoryName : categoryNames){
             categories.add(new Category(categoryName, databaseHandler.getEntries(categoryName)));
         }
 
         distance(tweets, categories);
-        tweets = null; //Ram tasarrufu
 
         return categories;
     }

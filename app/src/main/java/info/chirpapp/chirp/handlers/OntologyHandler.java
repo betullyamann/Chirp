@@ -32,7 +32,7 @@ public class OntologyHandler {
     }
 
     // Tag'e iliskin ontoloji olusturuluyor
-    public void createOnthology(String tag) {
+    public void createOntology(String tag) {
         Ontology ontology = new Ontology(tag);
         // Verilen tag'in primitive'i olusturuldu.
         prepareNode(ontology.getRoot());
@@ -171,28 +171,15 @@ public class OntologyHandler {
         for (Entry<String, Integer> entry : vector.entrySet()) {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
         }*/
-        //databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
         if (!ontology.getNodes().isEmpty()) {
-            databaseHandler.deleteCategory(ontology.getRoot().getName());
+            databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
             Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
         } else{
-
+            Log.e("ONT", "Wikipedia sayfasına erişilemedi.");
         }
     }
 
-    // Ontolojinin kelime vektörü çıkartılıyor.
-    // Kelime vektöründe komşu kelimeler ve bu kelimelerin ontolojiyle olan bağlantısı tutuluyor.
-    public HashMap<String, Integer> vectorize(Ontology ontology) {
-        HashMap<String, Integer> vector = new HashMap<>();
-
-        vector.put(ontology.getRoot().getName(), 10);
-        vector.putAll(ontology.getWords());
-
-        return vector;
-    }
-
-
-    public Boolean prepareNode(Node node) { // Wikipediadan gelen cevabı kopyalayıp yapıştırdım bunu kendisi alacak
+    public Boolean prepareNode(Node node) {
 
         //Wikipedia'ye sorgu yapılıp referanslar ve frekanslar alınıyor
         //TDKya sorgu yapılıp sayfa iceriği alınıyor

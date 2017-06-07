@@ -104,6 +104,7 @@ public class ConnectionHandler {
         Call<List<Tweet>> request = statusesService.homeTimeline(MAX_TWEET_COUNT, null, null, null, null, null, null);
         try {
             List<Tweet> result = request.execute().body();
+            System.out.println("RESULT " + result );
             for (Tweet tweet : result) {
                 tweets.add(new SimplifiedTweet(tweet));
             }

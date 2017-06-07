@@ -39,7 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         synchronized (mutex) {
             ContentValues values = new ContentValues();
-            values.put(CATEGORY_COL_NAME, '\'' + name + '\'');
+            values.put(CATEGORY_COL_NAME, name);
 
             insertedRowid = database.insert(TABLE_NAME_CATEGORY, null, values);
             Log.i(LOG_TAG, "Inserted category \"" + name + "\" with rowid " + insertedRowid + '.');
@@ -52,7 +52,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        contentValues.put(ENTRY_COL_WORD, '\'' + word + '\'');
+        contentValues.put(ENTRY_COL_WORD, word );
         contentValues.put(ENTRY_COL_WEIGHT, weight);
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
@@ -76,7 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        contentValues.put(ENTRY_COL_WORD, '\'' + word + '\'');
+        contentValues.put(ENTRY_COL_WORD,  word);
         contentValues.put(ENTRY_COL_WEIGHT, getMaxWeight());
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
@@ -111,7 +111,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public HashMap<String, Integer> getEntries(String categoryName) {
         HashMap<String, Integer> entries = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{ENTRY_COL_WORD, ENTRY_COL_WEIGHT}, null, null, null, null, null);
+        Cursor c = db.query(TABLE_NAME_ENTRY, new String[]{ENTRY_COL_WORD, ENTRY_COL_WEIGHT}, null, null, null, null, null);
 
         if (c.moveToFirst()) {
             do {
@@ -120,12 +120,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         c.close();
         return entries;
-    }
-
-    public Integer getCategoryCount() {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME_CATEGORY, null, null, null, null, null, null);
-        return c.getColumnCount();
     }
 
     //Verilen isimdeki kategoriyi siliyor
