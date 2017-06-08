@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -27,7 +29,9 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import info.chirpapp.chirp.R.id;
 import info.chirpapp.chirp.R.layout;
+import info.chirpapp.chirp.R.string;
 import info.chirpapp.chirp.handlers.DatabaseHandler;
 import info.chirpapp.chirp.handlers.OntologyHandler;
 import io.fabric.sdk.android.Fabric;
@@ -70,11 +74,26 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Log.i("TEST", "TEST");
                 if (databaseHandler.getCategoryNames().size() < 5) {
-                    ontologyHandler.createOntology("spor");
+                    /*ontologyHandler.createOntology("spor");
                     ontologyHandler.createOntology("terör");
                     ontologyHandler.createOntology("siyaset");
                     ontologyHandler.createOntology("eğlence");
                     ontologyHandler.createOntology("sanat");
+                    ontologyHandler.createOntology("eğitim");
+                    ontologyHandler.createOntology("müzik");
+                    ontologyHandler.createOntology("politika");
+                    ontologyHandler.createOntology("tarih");
+                    ontologyHandler.createOntology("coğrafya");
+                    ontologyHandler.createOntology("oyun");*/
+                    ontologyHandler.createOntology("teknoloji");
+                    ontologyHandler.createOntology("haberleşme");
+                    ontologyHandler.createOntology("bilgisayar");
+                    ontologyHandler.createOntology("otomotiv");
+                    ontologyHandler.createOntology("inşaat");
+                    ontologyHandler.createOntology("yemek");
+                    ontologyHandler.createOntology("aşçılık");
+                    ontologyHandler.createOntology("tarım");
+                    ontologyHandler.createOntology("mühendislik");
 
                 }
             }
@@ -84,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
             System.out.println("Not logged in... hmmm...");
-            final Activity activity = this;
+            Activity activity = this;
             loginButton = new TwitterLoginButton(activity) {
                 @Override
                 protected Activity getActivity() {
@@ -109,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             });
 
-            button.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     loginButton.performClick();
@@ -136,24 +155,24 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
-        navigationView = (NavigationView) findViewById(R.id.view_navigation);
-        getSupportFragmentManager().beginTransaction().replace(R.id.layout_frame, new TabFragment()).commit();
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);
+        navigationView = (NavigationView) findViewById(id.view_navigation);
+        getSupportFragmentManager().beginTransaction().replace(id.layout_frame, new TabFragment()).commit();
+        navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawerLayout.closeDrawers();
-                if (item.getItemId() == R.id.twitter_log_out) {
+                if (item.getItemId() == id.twitter_log_out) {
                 }
-                if (item.getItemId() == R.id.ontology_settings) {
+                if (item.getItemId() == id.ontology_settings) {
                 }
-                if (item.getItemId() == R.id.statistics) {
+                if (item.getItemId() == id.statistics) {
                 }
                 return false;
             }
         });
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        toolbar = (Toolbar) findViewById(id.toolbar);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, string.app_name, string.app_name);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }

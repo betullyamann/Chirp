@@ -135,34 +135,10 @@ public class OntologyHandler {
             }
         }
 
-        System.out.println("PAGE POINTS " + pagePoints.size());
-        for (Entry<String, Integer> entry : pagePoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + (entry.getValue()*1000 / pagePoints.size()));
-        }
-
-        System.out.println("WORD POINTS " + wordPoints.size());
-        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + entry.getValue()*1000 / pagePoints.size());
-        }
 
         for (Entry<String, Integer> entry : pagePoints.entrySet()) {
             entry.setValue((entry.getValue() * 1000) / wordPoints.size());
         }
-
-        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
-            entry.setValue((entry.getValue() * 1000) / wordPoints.size());
-        }
-
-        System.out.println("PAGE POINTS " + pagePoints.size());
-        for (Entry<String, Integer> entry : pagePoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + entry.getValue());
-        }
-
-        System.out.println("WORD POINTS " + wordPoints.size());
-        for (Entry<String, Integer> entry : wordPoints.entrySet()) {
-            System.out.println(entry.getKey() + ' ' + entry.getValue());
-        }
-
 
 
 
