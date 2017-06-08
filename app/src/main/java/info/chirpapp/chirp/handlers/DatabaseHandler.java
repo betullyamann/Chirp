@@ -52,31 +52,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        contentValues.put(ENTRY_COL_WORD, word );
+        contentValues.put(ENTRY_COL_WORD, word);
         contentValues.put(ENTRY_COL_WEIGHT, weight);
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
         Log.i(LOG_TAG, "Inserted entry \"" + word + "\" with weight " + weight + " to category with ID " + categoryID + " to row " + insertedRowid);
     }
 
-    public Integer getMaxWeight(){
+    public Integer getMaxWeight() {
         Integer maxWeight;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"MAX("+ENTRY_COL_WEIGHT+')'}, null, null, null, null, null);
+        Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"MAX(" + ENTRY_COL_WEIGHT + ')'}, null, null, null, null, null);
 
-        if(c.moveToFirst()){
+        if (c.moveToFirst()) {
             return c.getInt(0);
-        }else{
+        } else {
             return -1;
         }
     }
 
-    public void addEntry(Long categoryID, String word){
+    public void addEntry(Long categoryID, String word) {
         SQLiteDatabase database = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENTRY_COL_CATEGORY_ID, categoryID);
-        contentValues.put(ENTRY_COL_WORD,  word);
+        contentValues.put(ENTRY_COL_WORD, word);
         contentValues.put(ENTRY_COL_WEIGHT, getMaxWeight());
 
         Long insertedRowid = database.insert(TABLE_NAME_ENTRY, null, contentValues);
@@ -111,14 +111,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public HashMap<String, Integer> getEntries(String categoryName) {
         HashMap<String, Integer> entries = new HashMap<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME_ENTRY, new String[]{ENTRY_COL_WORD, ENTRY_COL_WEIGHT}, null, null, null, null, null);
+        Cursor c1 = db.query(TABLE_NAME_CATEGORY, new String[]{"rowid"}, CATEGORY_COL_NAME + "=?", new String[]{categoryName}, null, null, null);
+        String categoryID;
 
-        if (c.moveToFirst()) {
-            do {
-                entries.put(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT)));
-            } while (c.moveToNext());
+        if (c1.moveToFirst()) {
+            categoryID = c1.getString(c1.getColumnIndex("rowid"));
+
+
+            Cursor c = db.query(TABLE_NAME_ENTRY, new String[]{ENTRY_COL_WORD, ENTRY_COL_WEIGHT}, ENTRY_COL_CATEGORY_ID + "=?", new String[]{categoryID}, null, null, null);
+
+            if (c.moveToFirst()) {
+                do {
+                    entries.put(c.getString(c.getColumnIndex(ENTRY_COL_WORD)), c.getInt(c.getColumnIndex(ENTRY_COL_WEIGHT)));
+                } while (c.moveToNext());
+            }
+            c.close();
+        } else {
+            Log.e("DB", "CATEGORY NOT IN DB");
         }
-        c.close();
+
         return entries;
     }
 

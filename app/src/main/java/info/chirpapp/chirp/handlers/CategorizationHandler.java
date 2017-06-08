@@ -2,6 +2,8 @@ package info.chirpapp.chirp.handlers;
 
 import android.content.Context;
 
+import com.twitter.sdk.android.core.TwitterCore;
+
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
@@ -29,8 +31,10 @@ public class CategorizationHandler {
             System.out.println("TWEET: " + tweet);
             for (Category category : categories) {
                 for (Entry<String, Integer> entry : category.getWords().entrySet()) {
+                    System.out.println();
                     if (tweet.containsWord(entry.getKey())) {
                         category.addPoint(tweet, entry.getValue());
+                        //System.out.println("ENTRY KEY " + entry.getKey() +" POİNT :" + category.getPoint(tweet));
                     }
                 }
                 if (category.getTweets().containsKey(tweet)) {
@@ -38,15 +42,15 @@ public class CategorizationHandler {
                 }
             }
 
-            System.out.println("point " + point + " size " + categories.size());
+            //System.out.println("point " + point + " size " + categories.size());
             point /= categories.size();
-            System.out.println("avg point " + point);
+            //System.out.println("avg point " + point);
             for (Category category : categories) {
                 if (category.getTweets().containsKey(tweet)) {
                     if (category.getPoint(tweet) < point) {
                         category.getTweets().remove(tweet);
                     } else {
-                        System.out.println("CATEGORY " + category + " POINT " + category.getTweets().get(tweet));
+                        //System.out.println("CATEGORY " + category + " POINT " + category.getTweets().get(tweet));
                     }
                 }
             }
@@ -56,6 +60,10 @@ public class CategorizationHandler {
     }
 
     public ArrayList<Category> start() {
+        while(TwitterCore.getInstance().getSessionManager().getActiveSession() == null){
+
+        }
+
         ArrayList<SimplifiedTweet> tweets = connectionHandler.getTweets();
         languageHandler.parseTweets(tweets);
         ArrayList<Category> categories = new ArrayList<>();
@@ -63,10 +71,14 @@ public class CategorizationHandler {
         ArrayList<String> categoryNames = databaseHandler.getCategoryNames();
         System.out.println("categoryNames: " + categoryNames);
 
+
         for (String categoryName : categoryNames) {
             categories.add(new Category(categoryName, databaseHandler.getEntries(categoryName)));
         }
 
+        for (Category category : categories) {
+            System.out.println(category);
+        }
         distance(tweets, categories);
 
         return categories;
