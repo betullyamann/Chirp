@@ -128,14 +128,21 @@ public class OntologyHandler {
             }
         }
 
+        Integer averagePoint = 0;
+        for(Integer point : pagePoints.values()){
+            averagePoint += point;
+        }
+
+        averagePoint /= pagePoints.size();
+
         Iterator<Entry<String, Integer>> entryIterator = wordPoints.entrySet().iterator();
         while (entryIterator.hasNext()) {
-            if (entryIterator.next().getValue() == 0) {
+            if (entryIterator.next().getValue() < averagePoint) {
                 entryIterator.remove();
             }
         }
 
-
+        //Normalizasyon
         for (Entry<String, Integer> entry : pagePoints.entrySet()) {
             entry.setValue((entry.getValue() * 1000) / wordPoints.size());
         }
@@ -148,8 +155,12 @@ public class OntologyHandler {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
         }*/
         if (!ontology.getNodes().isEmpty()) {
-            databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints);
-            Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
+            if(databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints))
+            {
+                Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
+            }else{
+                Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " already exist");
+            }
         } else{
             Log.e("ONT", "Wikipedia sayfasına erişilemedi.");
         }

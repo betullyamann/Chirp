@@ -84,14 +84,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public void putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
-        Long categoryID = putCategory(categoryName);
+    public Boolean putWholeCategory(String categoryName, HashMap<String, Integer> elements) {
+        if(!getCategoryNames().contains(categoryName)){
+            Long categoryID = putCategory(categoryName);
 
-        for (Entry<String, Integer> element : elements.entrySet()) {
-            putEntry(categoryID, element.getKey(), element.getValue());
+            for (Entry<String, Integer> element : elements.entrySet()) {
+                putEntry(categoryID, element.getKey(), element.getValue());
+            }
+            return true;
+        }else {
+            return false;
         }
     }
-
 
     //Kategori isimleri bir arraylist olarak döndürülüyor.
     public ArrayList<String> getCategoryNames() {
