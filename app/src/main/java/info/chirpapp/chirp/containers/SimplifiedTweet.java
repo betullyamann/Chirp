@@ -22,7 +22,7 @@ public class SimplifiedTweet {
     public SimplifiedTweet(Tweet tweet) {
         name = tweet.user.name;
         handle = tweet.user.screenName;
-        text = tweet.text;
+        text = tweet.text.replaceAll("(https?:|@|#)[^ ]*", " ");
         words = new ArrayList<>();
         belongsToACategory = false;
     }

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.twitter.sdk.android.core.TwitterCore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 import info.chirpapp.chirp.containers.Category;
@@ -31,7 +30,7 @@ public class CategorizationHandler {
         for (SimplifiedTweet tweet : tweets) {
             counter = 0;
             System.out.println("____________________");
-            System.out.println("TWEET: " + tweet);
+            System.out.println("TWEET: " + tweet + " words " + tweet.getWords());
             for (Category category : categories) {
                 for (Entry<String, Integer> entry : category.getWords().entrySet()) {
                     if (tweet.containsWord(entry.getKey())) {
@@ -76,11 +75,8 @@ public class CategorizationHandler {
         languageHandler.parseTweets(tweets);
         ArrayList<Category> categories = new ArrayList<>();
 
-        ArrayList<String> categoryNames = databaseHandler.getCategoryNames();
-        System.out.println("categoryNames: " + categoryNames);
 
-
-        for (String categoryName : categoryNames) {
+        for (String categoryName : databaseHandler.getCategoryNames()) {
             categories.add(new Category(categoryName, databaseHandler.getEntries(categoryName)));
         }
 

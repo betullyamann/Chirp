@@ -38,4 +38,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public TweetFragment getTitleFragment(String title) {
         return (TweetFragment) fragments.get(titles.indexOf(title));
     }
+
+
 }

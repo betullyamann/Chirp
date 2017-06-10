@@ -60,7 +60,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Integer getMaxWeight() {
-        Integer maxWeight;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(TABLE_NAME_CATEGORY, new String[]{"MAX(" + ENTRY_COL_WEIGHT + ')'}, null, null, null, null, null);
 

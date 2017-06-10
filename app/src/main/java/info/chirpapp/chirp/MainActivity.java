@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Log.i("TEST", "TEST");
                 if (databaseHandler.getCategoryNames().size() < 5) {
-                    /*ontologyHandler.createOntology("spor");
+                    ontologyHandler.createOntology("spor");
                     ontologyHandler.createOntology("terör");
                     ontologyHandler.createOntology("siyaset");
                     ontologyHandler.createOntology("eğlence");
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     ontologyHandler.createOntology("politika");
                     ontologyHandler.createOntology("tarih");
                     ontologyHandler.createOntology("coğrafya");
-                    ontologyHandler.createOntology("oyun");*/
+                    ontologyHandler.createOntology("oyun");
                     ontologyHandler.createOntology("teknoloji");
                     ontologyHandler.createOntology("haberleşme");
                     ontologyHandler.createOntology("bilgisayar");
@@ -100,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         initializationThread.start();
-
+        Activity activity = this;
         if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
             System.out.println("Not logged in... hmmm...");
-            Activity activity = this;
+
             loginButton = new TwitterLoginButton(activity) {
                 @Override
                 protected Activity getActivity() {
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
                     Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                 }
+
                 @Override
                 public void failure(TwitterException exception) {
                     Log.d("TwitterKit", "Login with Twitter failure", exception);
@@ -149,20 +151,58 @@ public class MainActivity extends AppCompatActivity {
         //new Thread(() -> new OntologyHandler(getApplicationContext()).createOntology("Teknoloji")).start();
         //new Thread(() -> new OntologyHandler(getApplicationContext()).prepareNode(new Node("doğal"))).start();
 
+
+        drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);
+        navigationView = (NavigationView) findViewById(id.view_navigation);
+
         try {
             initializationThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        drawerLayout = (DrawerLayout) findViewById(id.layout_drawer);
-        navigationView = (NavigationView) findViewById(id.view_navigation);
         getSupportFragmentManager().beginTransaction().replace(id.layout_frame, new TabFragment()).commit();
         navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawerLayout.closeDrawers();
                 if (item.getItemId() == id.twitter_log_out) {
+                    Twitter.getSessionManager().clearActiveSession();
+                    Twitter.logOut();
+                    System.out.println("Not logged in... hmmm...");
+                    loginButton = new TwitterLoginButton(activity) {
+                        @Override
+                        protected Activity getActivity() {
+                            System.out.println("Take this activity and make it yours.");
+                            return activity;
+                        }
+                    };
+                    loginButton.setCallback(new Callback<TwitterSession>() {
+                        @Override
+                        public void success(Result<TwitterSession> result) {
+                            System.out.println("SUCCESS!!!");
+                            TwitterSession session = result.data;
+                            // TODO: Remove toast and use the TwitterSession's userID
+                            // with your app's user model
+                            String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void failure(TwitterException exception) {
+                            Log.d("TwitterKit", "Login with Twitter failure", exception);
+                        }
+
+                    });
+
+                    button.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            loginButton.performClick();
+                        }
+                    });
+
+                    System.out.println("login finished.");
                 }
                 if (item.getItemId() == id.ontology_settings) {
                 }
@@ -171,10 +211,58 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        navigationView.getHeaderView(0).findViewById(id.header_image).setOnClickListener(v -> {
+            if (TwitterCore.getInstance().getSessionManager().getActiveSession() == null) {
+                System.out.println("Not logged in... hmmm...");
+                loginButton = new TwitterLoginButton(activity) {
+                    @Override
+                    protected Activity getActivity() {
+                        System.out.println("Take this activity and make it yours.");
+                        return activity;
+                    }
+                };
+                loginButton.setCallback(new Callback<TwitterSession>() {
+                    @Override
+                    public void success(Result<TwitterSession> result) {
+                        System.out.println("SUCCESS!!!");
+                        TwitterSession session = result.data;
+                        // TODO: Remove toast and use the TwitterSession's userID
+                        // with your app's user model
+                        String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void failure(TwitterException exception) {
+                        Log.d("TwitterKit", "Login with Twitter failure", exception);
+                    }
+
+                });
+
+                button.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loginButton.performClick();
+                    }
+                });
+
+                System.out.println("login finished.");
+            } else {
+                System.out.println("already logged in m8");
+                System.out.println(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserName() + " is logged in");
+            }
+        });
+        if (TwitterCore.getInstance().getSessionManager().getActiveSession() != null) {
+            ((TextView) navigationView.getHeaderView(0).findViewById(id.drawer_username)).setText(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserName());
+            ((TextView) navigationView.getHeaderView(0).findViewById(id.drawer_handle)).setText(String.valueOf(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserId()));
+        }
+
         toolbar = (Toolbar) findViewById(id.toolbar);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, string.app_name, string.app_name);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
+
     }
 
 

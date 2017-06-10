@@ -15,8 +15,8 @@ import info.chirpapp.chirp.containers.WikiAvailability;
 public class OntologyHandler {
 
     private static final Integer TRM_PTS = 1;
-    private static final Integer FRQ_PTS = 2;
-    private static final Integer REF_PTS = 3;
+    private static final Integer FRQ_PTS = 1;
+    private static final Integer REF_PTS = 5;
 
     private final LanguageHandler languageHandler;
     private final ConnectionHandler connectionHandler;
@@ -146,8 +146,6 @@ public class OntologyHandler {
         for (Entry<String, Integer> entry : pagePoints.entrySet()) {
             entry.setValue((entry.getValue() * 1000) / wordPoints.size());
         }
-
-
 
         /*
         HashMap<String, Integer> vector = vectorize(ontology);
