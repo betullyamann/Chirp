@@ -255,14 +255,15 @@ public class MainActivity extends AppCompatActivity {
         if (TwitterCore.getInstance().getSessionManager().getActiveSession() != null) {
             ((TextView) navigationView.getHeaderView(0).findViewById(id.drawer_username)).setText(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserName());
             ((TextView) navigationView.getHeaderView(0).findViewById(id.drawer_handle)).setText(String.valueOf(TwitterCore.getInstance().getSessionManager().getActiveSession().getUserId()));
+
+
+            toolbar = (Toolbar) findViewById(id.toolbar);
+            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, string.app_name, string.app_name);
+            drawerLayout.addDrawerListener(drawerToggle);
+            drawerToggle.syncState();
+
+
         }
-
-        toolbar = (Toolbar) findViewById(id.toolbar);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, string.app_name, string.app_name);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-
     }
 
 

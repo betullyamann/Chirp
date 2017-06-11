@@ -61,7 +61,7 @@ public class TabFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
 
         for (String category : new DatabaseHandler(getActivity().getApplicationContext()).getCategoryNames()) {
-            viewPagerAdapter.addFragment(new TweetFragment(this), category);
+            viewPagerAdapter.addFragment(new TweetFragment(), category);
         }
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -69,30 +69,24 @@ public class TabFragment extends Fragment {
         // Now, this is a workaround. The setupWithViewPager doesn't works without the runnable. Maybe a Support Library Bug.
         tabLayout.post(() -> tabLayout.setupWithViewPager(viewPager));
 
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                populateFragments();
+            }
+        };
 
-        populateFragments();
+        thread.start();
 
         return view;
     }
 
     public void populateFragments() {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                categories.clear();
-                for (Category category : categorizationHandler.start()) {
-                    categories.put(category.getName(), category);
-                    viewPagerAdapter.getTitleFragment(category.getName()).setListToView(new ArrayList<>(category.getTweets().keySet()));
-                }
-            }
-        };
-
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        categories.clear();
+        for (Category category : categorizationHandler.start()) {
+            categories.put(category.getName(), category);
+            viewPagerAdapter.getTitleFragment(category.getName()).setListToView(new ArrayList<>(category.getTweets().keySet()));
         }
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,10 @@ import info.chirpapp.chirp.containers.SimplifiedTweet;
  */
 public class TweetFragment extends Fragment {
 
-    private final TabFragment tabFragment;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ListView listView;
 
-    public TweetFragment(TabFragment tabFragment) {
-        this.tabFragment = tabFragment;
+    public TweetFragment() {
     }
 
     @Override
@@ -37,12 +34,6 @@ public class TweetFragment extends Fragment {
         //inflater-sisirmek
         View view = inflater.inflate(layout.fragment_tweet, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                tabFragment.populateFragments();
-            }
-        });
         listView = (ListView) view.findViewById(id.list_view);
         return view;
     }
