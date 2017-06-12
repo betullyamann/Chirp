@@ -63,6 +63,6 @@ public class SimplifiedTweet {
 
     @Override
     public String toString() {
-        return name + " (" + handle + ") :\n  " + text;
+        return name + " (" + handle + ") :  " + text;
     }
 }

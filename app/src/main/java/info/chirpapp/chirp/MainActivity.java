@@ -74,21 +74,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Log.i("TEST", "TEST");
-                if (databaseHandler.getCategoryNames().size() < 50) {
-                    ontologyHandler.createOntology("spor");
-                    ontologyHandler.createOntology("siyaset");
-                    ontologyHandler.createOntology("sanat");
-                    ontologyHandler.createOntology("eğitim");
-                    ontologyHandler.createOntology("tarih");
-                    ontologyHandler.createOntology("oyun");
-                    ontologyHandler.createOntology("bilim");
-                    ontologyHandler.createOntology("haberleşme");
-                    ontologyHandler.createOntology("bilgisayar");
-//                    ontologyHandler.createOntology("otomotiv");
-//                    ontologyHandler.createOntology("inşaat");
-//                    ontologyHandler.createOntology("yemek");
-//                    ontologyHandler.createOntology("tarım");
-//                    ontologyHandler.createOntology("mühendislik");
+                if (databaseHandler.getCategoryNames().size() == 0) {
+//                    ontologyHandler.createOntology("spor");
+//                    ontologyHandler.createOntology("siyaset");
+//                    ontologyHandler.createOntology("sanat");
+//                    ontologyHandler.createOntology("eğitim");
+//                    ontologyHandler.createOntology("tarih");
+//                    ontologyHandler.createOntology("coğrafya");
+//                    ontologyHandler.createOntology("oyun");
+//                    ontologyHandler.createOntology("bilim");
+//                    ontologyHandler.createOntology("haberleşme");
+//                    ontologyHandler.createOntology("bilgisayar");
+                    ontologyHandler.createOntology("otomotiv");
+                    ontologyHandler.createOntology("inşaat");
+                    ontologyHandler.createOntology("yemek");
+                    ontologyHandler.createOntology("tarım");
+                    ontologyHandler.createOntology("mühendislik");
 
                 }
             }

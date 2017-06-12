@@ -7,6 +7,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import info.chirpapp.chirp.containers.Category;
@@ -47,6 +48,7 @@ public class CategorizationHandler {
                         wordCount += 3;
 
                         category.addPoint(tweet, entry.getValue());
+                        tweet.setBelonging(1);
 
                         System.out.print(" TWEET CONTAINS WORD " + entry.getKey() + " %%%%%% " + " WORDCOUNT " + wordCount + " %%%%%% " + " TWEET CATEGORY POINT " + category.getPoint(tweet) + " %%%%%% ");
                         // System.out.println("ENTRY KEY " + entry.getKey() +" POINT :" + category.getPoint(tweet));
@@ -60,6 +62,7 @@ public class CategorizationHandler {
                     if (tweet.containsWord(entry.getKey())) {
                         wordCount++;
                         category.addPoint(tweet, entry.getValue());
+                        tweet.setBelonging(1);
                         System.out.print(" TWEET CONTAINS WORD " + entry.getKey() + " %%%%%% " + " WORDCOUNT " + wordCount + " %%%%%% " + " TWEET CATEGORY POINT " + category.getPoint(tweet) + " %%%%%% ");
                         // System.out.println("ENTRY KEY " + entry.getKey() +" POINT :" + category.getPoint(tweet));
                     }
@@ -85,14 +88,10 @@ public class CategorizationHandler {
                             }
                         }
 
-                        if (category.getPoint(tweet) < point) {
-                            System.out.print(" CATEGORY " + category.getName() + " REMOVEPOINT " + tweet + " %%%%%% " );
+                        if (category.getPoint(tweet) < point && wordCount < 2) {
+                            System.out.print(" CATEGORY " + category.getName() + " REMOVE " + tweet + " %%%%%% " );
                             category.getTweets().remove(tweet);
-                        }
-
-                        if (wordCount < 2) {
-                            System.out.print(" CATEGORY " + category.getName() +" REMOVECOUNT " + tweet + " %%%%%% " );
-                            category.getTweets().remove(tweet);
+                            tweet.setBelonging(-1);
                         }
 
                     }
@@ -112,6 +111,7 @@ public class CategorizationHandler {
         languageHandler.parseTweets(tweets);
         ArrayList<Category> categories = new ArrayList<>();
         ArrayList<String> categoryNames = databaseHandler.getCategoryNames();
+        Category unCategorized = new Category("unCategorized", null);
 
 
         for (String categoryName : databaseHandler.getCategoryNames()) {
@@ -122,6 +122,13 @@ public class CategorizationHandler {
             System.out.println(category);
         }
         distance(tweets, categories);
+
+        categories.add(unCategorized);
+        for(SimplifiedTweet tweet : tweets){
+            if(tweet.belongsToACategory() <= 0){
+                unCategorized.getTweets().put(tweet, 1);
+            }
+        }
 
         return categories;
     }
