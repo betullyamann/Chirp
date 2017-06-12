@@ -11,9 +11,4 @@
         android:icon="@drawable/settings"
         android:title="@string/settings" />
 
-    <item
-        android:id="@+id/statistics"
-        android:icon="@drawable/statistics"
-        android:title="@string/statistics" />
-
 </menu>

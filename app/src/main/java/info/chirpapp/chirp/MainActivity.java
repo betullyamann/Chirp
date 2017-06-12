@@ -200,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (item.getItemId() == id.ontology_settings) {
                 }
-                if (item.getItemId() == id.statistics) {
-                }
                 return false;
             }
         });
