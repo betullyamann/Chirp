@@ -9,14 +9,14 @@ public class SimplifiedTweet {
     private final String handle;
     private final String text;
     private final ArrayList<String> words;
-    private Boolean belongsToACategory;
+    private Integer belongsToACategory;
 
     public SimplifiedTweet(String name, String handle, String text) {
         this.name = name;
         this.handle = handle;
         this.text = text;
         words = new ArrayList<>();
-        belongsToACategory = false;
+        belongsToACategory = 0;
     }
 
     public SimplifiedTweet(Tweet tweet) {
@@ -24,7 +24,7 @@ public class SimplifiedTweet {
         handle = tweet.user.screenName;
         text = tweet.text.replaceAll("(https?:|@|#)[^ ]*", " ");
         words = new ArrayList<>();
-        belongsToACategory = false;
+        belongsToACategory = 0;
     }
 
 
@@ -53,16 +53,16 @@ public class SimplifiedTweet {
         return words.contains(entry);
     }
 
-    public Boolean belongsToACategory() {
+    public Integer belongsToACategory() {
         return belongsToACategory;
     }
 
-    public void setBelongingTrue() {
-        belongsToACategory = true;
+    public void setBelonging(Integer belonging) {
+        belongsToACategory += belonging;
     }
 
     @Override
     public String toString() {
-        return name + " (" + handle + ") :  " + text;
+        return name + " (" + handle + ") :\n  " + text;
     }
 }

@@ -45,7 +45,7 @@ public class LanguageHandler {
             "siz", "siz", "sizden", "sizden", "size", "sizi", "sizi", "sizin", "sizin", "sonra", "şablon", "şöyle", "şu", "şuna", "şunları",
             "şunu", "ta", "tartışma", "tabii", "tam", "tamam", "tamamen", "tanım", "tanımla", "tarafından", "trilyon", "tüm", "tümü", "u", "ü", "üç", "un", "ün", "üzere",
             "var", "vardı", "ve", "veya", "vikipedi", "ya", "ya da", "yani", "yapacak", "yapılan", "yapılması", "yapıyor", "yapmak", "yaptı", "yaptığı",
-            "yaptığını", "yaptıkları", "ye", "yedi", "yerine", "yetmiş", "yi", "yı", "yine", "yirmi", "yoksa", "yu", "yüz", "zaten", "zira"));
+            "yaptığını", "yaptıkları", "ye", "yedi", "yerine", "yetmiş", "yi", "yı", "yine", "yirmi", "yoksa", "yu", "yüz", "zaten", "zira", "yeni", "ilk", "bura"));
     private final Zemberek zemberek;
 
     public LanguageHandler() {
@@ -127,6 +127,7 @@ public class LanguageHandler {
 
     // Kelimelerin frekanslari bulunuyor.
     public void parseFrequencies(Node node) {
+        int counter=0;
         List<YaziBirimi> analizDizisi = YaziIsleyici.analizDizisiOlustur(node.getWikiText());
         for (YaziBirimi birim : analizDizisi) {
             try {
@@ -134,6 +135,7 @@ public class LanguageHandler {
                     Kelime[] kelimeDizisi = zemberek.kelimeCozumle(birim.icerik);
                     if (Objects.equals(kelimeDizisi[0].kok().tip(), KelimeTipi.ISIM) || !STOP_WORDS.contains(kelimeDizisi[0].kok().icerik())) {
                         node.updateFrequencies(kelimeDizisi[0].kok().icerik());
+                        counter++;
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -145,7 +147,7 @@ public class LanguageHandler {
 
         while (iterator.hasNext()) {
             Entry<String, Integer> entry = iterator.next();
-            if (entry.getValue() < FREQUENCY_THRESHOLD || STOP_WORDS.contains(entry.getKey())) {
+            if ((entry.getValue() < (counter/node.getFrequencies().size())) || STOP_WORDS.contains(entry.getKey())) {
                 iterator.remove();
             }
         }

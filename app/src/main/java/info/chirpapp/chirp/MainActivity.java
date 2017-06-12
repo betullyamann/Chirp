@@ -74,27 +74,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Log.i("TEST", "TEST");
-                if (databaseHandler.getCategoryNames().size() < 5) {
+                if (databaseHandler.getCategoryNames().size() < 50) {
                     ontologyHandler.createOntology("spor");
-                    ontologyHandler.createOntology("terör");
                     ontologyHandler.createOntology("siyaset");
-                    ontologyHandler.createOntology("eğlence");
                     ontologyHandler.createOntology("sanat");
                     ontologyHandler.createOntology("eğitim");
-                    ontologyHandler.createOntology("müzik");
-                    ontologyHandler.createOntology("politika");
                     ontologyHandler.createOntology("tarih");
-                    ontologyHandler.createOntology("coğrafya");
                     ontologyHandler.createOntology("oyun");
-                    ontologyHandler.createOntology("teknoloji");
+                    ontologyHandler.createOntology("bilim");
                     ontologyHandler.createOntology("haberleşme");
                     ontologyHandler.createOntology("bilgisayar");
-                    ontologyHandler.createOntology("otomotiv");
-                    ontologyHandler.createOntology("inşaat");
-                    ontologyHandler.createOntology("yemek");
-                    ontologyHandler.createOntology("aşçılık");
-                    ontologyHandler.createOntology("tarım");
-                    ontologyHandler.createOntology("mühendislik");
+//                    ontologyHandler.createOntology("otomotiv");
+//                    ontologyHandler.createOntology("inşaat");
+//                    ontologyHandler.createOntology("yemek");
+//                    ontologyHandler.createOntology("tarım");
+//                    ontologyHandler.createOntology("mühendislik");
 
                 }
             }

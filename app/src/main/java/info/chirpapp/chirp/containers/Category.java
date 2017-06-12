@@ -1,6 +1,8 @@
 package info.chirpapp.chirp.containers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Category {
     private String name;
@@ -42,7 +44,7 @@ public class Category {
             tweets.put(tweet, tweets.get(tweet) + frequency);
         } else {
             tweets.put(tweet, frequency);
-            tweet.setBelongingTrue();
+            tweet.setBelonging(1);
         }
     }
 

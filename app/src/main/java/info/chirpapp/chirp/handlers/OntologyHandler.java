@@ -3,6 +3,7 @@ package info.chirpapp.chirp.handlers;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -42,19 +43,12 @@ public class OntologyHandler {
             Node leaf = new Node(str);
             //Log.i("ONT", "========================================");
             Log.i("ONT", "LEAF NAME " + leaf.getName());
-            if (prepareNode(leaf)) {
-                ontology.addNode(leaf);
-            } else {
-                Log.w("ONT", "PAGE " + leaf.getName() + " ISNT AVAILABLE ON WIKIPEDIA");
-            }
-        }
-
-        Boolean stopLoop = false;
-        Iterator<Node> iterator = ontology.getNodes().iterator();
-        while (iterator.hasNext() && !stopLoop) {
-            if (Objects.equals(iterator.next().getName(), ontology.getRoot().getName())) {
-                iterator.remove();
-                stopLoop = true;
+            if (!Objects.equals(str, ontology.getRoot().getName())) {
+                if (prepareNode(leaf)) {
+                    ontology.addNode(leaf);
+                } else {
+                    Log.w("ONT", "PAGE " + leaf.getName() + " ISNT AVAILABLE ON WIKIPEDIA");
+                }
             }
         }
 
@@ -68,17 +62,22 @@ public class OntologyHandler {
             pagePoints.put(node.getName(), 0);
         }
 
-        HashMap<String, Integer> wordPoints = new HashMap<>();
+        ArrayList<String> wordPoints = new ArrayList<>();
         for (Node node : ontology.getNodes()) {
             for (String str : node.getReferences()) {
-                wordPoints.put(str, 0);
+                if (!wordPoints.contains(str)) {
+                    wordPoints.add(str);
+                }
             }
             for (String str : node.getFrequencies().keySet()) {
-                wordPoints.put(str, 0);
-
+                if (!wordPoints.contains(str)) {
+                    wordPoints.add(str);
+                }
             }
             for (String str : node.getTerms()) {
-                wordPoints.put(str, 0);
+                if (!wordPoints.contains(str)) {
+                    wordPoints.add(str);
+                }
             }
         }
 
@@ -87,64 +86,45 @@ public class OntologyHandler {
             for (String str : node.getReferences()) {
                 if (ontology.getRoot().getReferences().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + REF_PTS);
                 }
                 if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
                 }
                 if (ontology.getRoot().getTerms().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
                 }
             }
             for (String str : node.getFrequencies().keySet()) {
                 if (ontology.getRoot().getReferences().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + REF_PTS);
                 }
                 if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
                 }
                 if (ontology.getRoot().getTerms().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
                 }
             }
             for (String str : node.getTerms()) {
                 if (ontology.getRoot().getReferences().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + REF_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + REF_PTS);
                 }
                 if (ontology.getRoot().getFrequencies().keySet().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + FRQ_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + FRQ_PTS);
                 }
                 if (ontology.getRoot().getTerms().contains(str)) {
                     pagePoints.put(node.getName(), pagePoints.get(node.getName()) + TRM_PTS);
-                    wordPoints.put(str, wordPoints.get(str) + TRM_PTS);
                 }
-            }
-        }
-
-        Integer averagePoint = 0;
-        for(Integer point : pagePoints.values()){
-            averagePoint += point;
-        }
-
-        averagePoint /= pagePoints.size();
-
-        Iterator<Entry<String, Integer>> entryIterator = wordPoints.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            if (entryIterator.next().getValue() < averagePoint) {
-                entryIterator.remove();
             }
         }
 
         //Normalizasyon
         for (Entry<String, Integer> entry : pagePoints.entrySet()) {
-            entry.setValue((entry.getValue() * 1000) / wordPoints.size());
+            if (!wordPoints.isEmpty()) {
+                entry.setValue((entry.getValue() * 1000) / wordPoints.size());
+            } else {
+                entry.setValue(0);
+            }
         }
 
         /*
@@ -153,13 +133,12 @@ public class OntologyHandler {
             System.out.println("key " + entry.getKey() + " value " + entry.getValue());
         }*/
         if (!ontology.getNodes().isEmpty()) {
-            if(databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints))
-            {
+            if (databaseHandler.putWholeCategory(ontology.getRoot().getName(), pagePoints)) {
                 Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " is created.");
-            }else{
+            } else {
                 Log.i("ONT", "Ontology " + ontology.getRoot().getName() + " already exist");
             }
-        } else{
+        } else {
             Log.e("ONT", "Wikipedia sayfasına erişilemedi.");
         }
     }
